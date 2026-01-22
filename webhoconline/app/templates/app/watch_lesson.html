@@ -11,6 +11,58 @@
             </div>
             <h3 class="fw-bold">{{ current_lesson.title }}</h3>
             <p class="text-muted">{{ course.title }}</p>
+
+            <hr class="my-4">
+
+            <div class="bg-light p-4 rounded shadow-sm mb-5">
+                <h4 class="fw-bold mb-4"><i class="bi bi-chat-dots-fill text-primary"></i> Đánh giá bài học</h4>
+
+                <form method="POST" class="mb-5">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-3 mb-3">
+                            <label class="fw-bold form-label">Số sao:</label>
+                            {{ form.rating }}
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            <label class="fw-bold form-label">Bình luận của bạn:</label>
+                            {{ form.comment }}
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary px-4">
+                        <i class="bi bi-send-fill"></i> Gửi đánh giá
+                    </button>
+                </form>
+
+                <h5 class="fw-bold border-bottom pb-2 mb-3">Các đánh giá trước đó ({{ reviews.count }})</h5>
+
+                <div class="review-list">
+                    {% for review in reviews %}
+                    <div class="card mb-3 border-0 shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <strong class="text-primary"><i class="bi bi-person-circle"></i> {{ review.user.username }}</strong>
+                                    <span class="ms-2 text-warning">
+                                        {% for i in "12345" %}
+                                        {% if forloop.counter <= review.rating %}
+                                        <i class="bi bi-star-fill"></i>
+                                        {% else %}
+                                        <i class="bi bi-star"></i>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </span>
+                                </div>
+                                <small class="text-muted">{{ review.created_at|date:"d/m/Y H:i" }}</small>
+                            </div>
+                            <p class="card-text mt-2 text-dark">{{ review.comment }}</p>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <p class="text-center text-muted py-3">Chưa có đánh giá nào. Hãy là người đầu tiên!</p>
+                    {% endfor %}
+                </div>
+            </div>
         </div>
 
         <div class="col-md-4">

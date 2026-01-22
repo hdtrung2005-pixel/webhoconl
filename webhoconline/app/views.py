@@ -1,58 +1,57 @@
 ﻿from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from .models import *
-from .models import Course
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required 
 from django.db.models import Q
 from django.core.paginator import Paginator
-from .forms import ProfileForm
-from .models import Lesson
+from .forms import ProfileForm, ReviewForm 
 
-# Gắn ổ khóa vào đây
+# --- CÁC HÀM VIEW ---
+
 @login_required 
 def home(request):
     courses = Course.objects.all()
     return render(request, 'app/home.html', {'courses': courses})
+
 def detail(request, course_id):
     course = get_object_or_404(Course, pk=course_id)
     user_has_course = False
     
-    # Nếu đã đăng nhập, kiểm tra xem đã mua chưa
+    # Kiểm tra user đã mua khóa học chưa
     if request.user.is_authenticated:
-        pass 
+        # Kiểm tra trong bảng OrderItem xem user đã mua course này chưa
+        has_bought = OrderItem.objects.filter(order__user=request.user, course=course).exists()
+        if has_bought:
+            user_has_course = True
+
     return render(request, 'app/detail.html', {
         'course': course,
-        'user_has_course': user_has_course # Truyền biến này sang HTML
+        'user_has_course': user_has_course 
     })
+
 def register(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
-            login(request, user)  # Đăng ký xong tự đăng nhập luôn
-            return redirect('home')  # Quay về trang chủ
+            login(request, user)  
+            return redirect('home')  
     else:
         form = UserCreationForm()
     return render(request, 'app/register.html', {'form': form})
+
 def add_to_cart(request, course_id):
-    # Lấy giỏ hàng hiện tại từ session (nếu chưa có thì tạo dict rỗng)
     cart = request.session.get('cart', {})
-    
-    # Chuyển ID sang chuỗi để làm key lưu trữ
     course_id_str = str(course_id)
     
-    # Logic: Nếu có rồi thì +1, chưa có thì gán = 1
     if course_id_str in cart:
         cart[course_id_str] += 1
     else:
         cart[course_id_str] = 1
         
-    # Lưu ngược lại vào session
     request.session['cart'] = cart
-    
-    # Chuyển hướng đến trang xem giỏ hàng
     return redirect('cart_detail')
 
 def cart_detail(request):
@@ -60,7 +59,6 @@ def cart_detail(request):
     cart_items = []
     total_price = 0
     
-    # Duyệt qua các ID trong giỏ để lấy thông tin chi tiết khóa học từ Database
     for course_id, quantity in cart.items():
         course = get_object_or_404(Course, pk=course_id)
         subtotal = course.price * quantity
@@ -78,29 +76,22 @@ def cart_detail(request):
 
 def remove_from_cart(request, course_id):
     cart = request.session.get('cart', {})
-    
-    # Chuyển ID sang chuỗi (vì key trong session là chuỗi)
     course_id_str = str(course_id)
     
-    # Kiểm tra xem sản phẩm có trong giỏ không, có thì xóa
     if course_id_str in cart:
         del cart[course_id_str]
         
-    # Lưu lại session mới (QUAN TRỌNG: Quên dòng này là không xóa được)
     request.session['cart'] = cart
-    
-    # Xóa xong thì load lại trang giỏ hàng
     return redirect('cart_detail')
-@login_required  # Nhớ dòng này để bắt buộc đăng nhập mới được thanh toán
+
+@login_required
 def checkout(request):
     cart = request.session.get('cart', {})
     
-    # 1. Nếu giỏ hàng trống
     if not cart:
         messages.warning(request, "Giỏ hàng của bạn đang trống!")
         return redirect('cart_detail')
     
-    # 2. Tạo đơn hàng chính
     order = Order.objects.create(
         user=request.user, 
         total_price=0 
@@ -108,59 +99,51 @@ def checkout(request):
     
     total_price = 0
     
-    # 3. Duyệt qua giỏ hàng (Lưu ý: item ở đây chính là số lượng)
     for course_id, quantity in cart.items():
         try:
             course = Course.objects.get(id=course_id)
-            
-            # Tạo chi tiết đơn hàng
             OrderItem.objects.create(
                 order=order,
                 course=course,
-                price=course.price, # <--- LẤY GIÁ TỪ DATABASE (Đúng)
-                quantity=quantity   # <--- LẤY SỐ LƯỢNG TỪ GIỎ (Đúng)
+                price=course.price,
+                quantity=quantity
             )
-            
-            # Cộng dồn tổng tiền
             total_price += course.price * quantity
             
         except Course.DoesNotExist:
             continue
         
-    # 4. Cập nhật tổng tiền và xóa giỏ hàng
     order.total_price = total_price
     order.save()
     
-    request.session['cart'] = {} # Xóa sạch giỏ hàng
+    request.session['cart'] = {} 
     messages.success(request, "Đặt hàng thành công! Cảm ơn bạn.")
     return redirect('home')
+
 @login_required
 def order_history(request):
-    # Lấy danh sách đơn hàng của user, xếp theo ngày mới nhất
     orders = Order.objects.filter(user=request.user).order_by('-created_at')
     return render(request, 'app/order_history.html', {'orders': orders})
+
 def search(request):
-    query = request.GET.get('q', '') # Lấy từ khóa người dùng nhập (nếu không có thì để rỗng)
+    query = request.GET.get('q', '') 
     courses = []
 
     if query:
-        # Tìm các khóa học có Tiêu đề HOẶC Mô tả chứa từ khóa (icontains = không phân biệt hoa thường)
         courses = Course.objects.filter(
             Q(title__icontains=query) | Q(description__icontains=query)
         )
     
     return render(request, 'app/search.html', {'courses': courses, 'query': query})
-#chức năng tìm kiếm 
-def all_courses(request):
-    courses_list = Course.objects.all().order_by('-id') # Lấy tất cả, mới nhất lên đầu
-    categories = Category.objects.all() # Lấy danh mục để làm bộ lọc
 
-    # 1. Xử lý lọc theo danh mục (nếu user bấm vào sidebar)
+def all_courses(request):
+    courses_list = Course.objects.all().order_by('-id') 
+    categories = Category.objects.all() 
+
     cate_id = request.GET.get('category')
     if cate_id:
         courses_list = courses_list.filter(category_id=cate_id)
 
-    # 2. Phân trang (Mỗi trang hiện 6 khóa học)
     paginator = Paginator(courses_list, 6) 
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -170,7 +153,7 @@ def all_courses(request):
         'categories': categories,
         'current_cate': cate_id
     })
-#lộ trình 
+
 def roadmap_list(request):
     roadmaps = Roadmap.objects.all()
     return render(request, 'app/roadmap.html', {'roadmaps': roadmaps})
@@ -178,10 +161,9 @@ def roadmap_list(request):
 def roadmap_detail(request, pk):
     roadmap = get_object_or_404(Roadmap, pk=pk)
     return render(request, 'app/roadmap_detail.html', {'roadmap': roadmap})
-#hồ sơ cá nhân
+
 @login_required
 def profile(request):
-    # Xử lý khi người dùng bấm nút "Lưu thay đổi"
     if request.method == 'POST':
         form = ProfileForm(request.POST, instance=request.user)
         if form.is_valid():
@@ -189,39 +171,49 @@ def profile(request):
             messages.success(request, "Cập nhật hồ sơ thành công!")
             return redirect('profile')
     else:
-        # Nếu mới vào trang thì hiện thông tin cũ
         form = ProfileForm(instance=request.user)
 
     return render(request, 'app/profile.html', {'form': form})
-#video bài gỉang
+
 @login_required
 def watch_lesson(request, course_id, lesson_id):
     course = get_object_or_404(Course, pk=course_id)
-    
-    # Lấy bài học hiện tại
     lesson = get_object_or_404(Lesson, pk=lesson_id)
-    
-    # Lấy danh sách tất cả bài học để hiển thị bên sidebar
     lessons = course.lessons.all()
+
+    # Lấy danh sách đánh giá cũ
+    reviews = lesson.reviews.all().order_by('-created_at')
+
+    # Xử lý Form đánh giá
+    if request.method == 'POST':
+        form = ReviewForm(request.POST)
+        if form.is_valid():
+            review = form.save(commit=False)
+            review.user = request.user
+            review.lesson = lesson
+            review.save()
+            messages.success(request, "Cảm ơn bạn đã gửi đánh giá!")
+            return redirect('watch_lesson', course_id=course_id, lesson_id=lesson_id)
+    else:
+        form = ReviewForm()
 
     return render(request, 'app/watch_lesson.html', {
         'course': course,
-        'current_lesson': lesson,
-        'lessons': lessons
+        'current_lesson': lesson, 
+        'lessons': lessons,
+        'reviews': reviews,       
+        'form': form,             
     })
 
 @login_required
 def cancel_order(request, order_id):
-    # 1. Tìm đơn hàng theo ID và phải đúng là của người dùng đó (để tránh hủy đơn người khác)
     order = get_object_or_404(Order, pk=order_id, user=request.user)
 
-    # 2. Kiểm tra: Chỉ cho hủy nếu đơn đang ở trạng thái "Chờ xử lý"
     if order.status == 'Pending':
-        order.status = 'Canceled' # Chuyển trạng thái thành Đã hủy
+        order.status = 'Canceled' 
         order.save()
         messages.success(request, "Đã hủy đơn hàng thành công!")
     else:
-        messages.error(request, "Đơn hàng này không thể hủy (Do đã hoàn thành hoặc đã hủy trước đó).")
+        messages.error(request, "Đơn hàng này không thể hủy.")
     
-    # 3. Quay lại trang lịch sử
     return redirect('order_history')

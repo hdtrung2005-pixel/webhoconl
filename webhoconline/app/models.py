@@ -148,3 +148,12 @@ class Lesson(models.Model):
         ordering = ['order'] # Mặc định sắp xếp theo thứ tự
         verbose_name = "Bài học"
         verbose_name_plural = "Danh sách Bài học"
+class LessonReview(models.Model):
+    lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE, related_name='reviews')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    rating = models.IntegerField(default=5, choices=[(i, str(i)) for i in range(1, 6)]) # Điểm 1-5
+    comment = models.TextField(verbose_name="Nội dung bình luận")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.lesson.title}"
