@@ -17,7 +17,15 @@ def home(request):
     return render(request, 'app/home.html', {'courses': courses})
 def detail(request, course_id):
     course = get_object_or_404(Course, pk=course_id)
-    return render(request, 'app/detail.html', {'course': course})
+    user_has_course = False
+    
+    # Nếu đã đăng nhập, kiểm tra xem đã mua chưa
+    if request.user.is_authenticated:
+        pass 
+    return render(request, 'app/detail.html', {
+        'course': course,
+        'user_has_course': user_has_course # Truyền biến này sang HTML
+    })
 def register(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
