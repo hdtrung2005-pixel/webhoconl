@@ -1,4 +1,4 @@
-﻿#  Web Học Lập Trình (Django E-Learning Platform)
+﻿**#  Web Học Lập Trình (Django E-Learning Platform)
 
 > Hệ thống website học trực tuyến (E-Learning) được xây dựng bằng **Django Framework**, cho phép người dùng mua khóa học, xem lộ trình và học qua video bài giảng.
 
@@ -10,7 +10,7 @@ Dự án này là một nền tảng giáo dục trực tuyến, nơi Học viê
 
 ---
 
-##  Tính năng nổi bật
+## Tính năng nổi bật
 
 ### 1.  Dành cho Học viên (User)
 * **Hệ thống tài khoản:** Đăng ký, Đăng nhập, Quản lý hồ sơ cá nhân (Profile).
@@ -24,7 +24,7 @@ Dự án này là một nền tảng giáo dục trực tuyến, nơi Học viê
 * **Mua sắm & Thanh toán:**
     * Thêm khóa học vào giỏ hàng.
     * Thanh toán (COD / Chuyển khoản).
-    * **Quản lý đơn hàng:** Xem trạng thái đơn, **Hủy đơn hàng** (khi chưa xử lý).
+    * **Quản lý đơn hàng:** Xem trạng thái đơn, **Hủy đơn hàng** (khi trạng thái đang chờ xử lý).
 
 ### 2.  Dành cho Quản trị viên (Admin)
 * **Quản lý Khóa học:** Thêm/Sửa/Xóa khóa học.
@@ -35,7 +35,7 @@ Dự án này là một nền tảng giáo dục trực tuyến, nơi Học viê
 
 ---
 
-##  Công nghệ sử dụng
+## Công nghệ sử dụng
 
 * **Backend:** Python 3.x, Django 5.x.
 * **Frontend:** HTML5, CSS3, **Bootstrap 5** (Responsive), Bootstrap Icons.
@@ -50,5 +50,38 @@ Dự án này là một nền tảng giáo dục trực tuyến, nơi Học viê
 
 ### Bước 1: Clone dự án
 ```bash
-git clone [https://github.com/Hoangnolove/Book-store.git](https://github.com/Hoangnolove/Book-store.git)
-cd Book-store
+git clone [https://github.com/TEN-CUA-BAN/TEN-REPO.git](https://github.com/TEN-CUA-BAN/TEN-REPO.git)
+cd TEN-REPO**
+```
+Bước 2: Tạo môi trường ảo (Khuyên dùng)
+```Bash
+
+python -m venv venv
+# Windows:
+venv\Scripts\activate
+# MacOS/Linux:
+source venv/bin/activate
+```
+Bước 3: Cài đặt thư viện
+```Bash
+
+pip install django pillow
+```
+Bước 4: Khởi tạo Database
+```Bash
+
+python manage.py makemigrations
+python manage.py migrate
+```
+Bước 5: Tạo tài khoản Admin
+```Bash
+
+python manage.py createsuperuser
+# Nhập username, email và password...
+```
+Bước 6: Chạy Server
+```Bash
+
+python manage.py runserver
+```
+##Hình ảnh Demo
