@@ -1,0 +1,113 @@
+﻿{% extends 'app/base.html' %}
+{% load static %}
+{% load humanize %}   ```
+
+{% block title %}Trang chủ - Học Lập Trình{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* CSS cho Banner Slider */
+    .carousel-item img {
+        height: 380px;
+        object-fit: cover;
+    }
+
+    /* CSS cho thẻ Card */
+    .product-card {
+        border: 1px solid #e0e0e0;
+        transition: all 0.3s ease;
+        background: #fff;
+    }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            border-color: #0d6efd; /* Viền xanh khi hover */
+        }
+
+    .card-img-top {
+        height: 200px;
+        object-fit: cover;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .btn-view {
+        border-radius: 50px;
+        font-weight: 600;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div id="mainBanner" class="carousel slide mb-5 rounded-4 overflow-hidden shadow" data-bs-ride="carousel">
+    <div class="carousel-indicators">
+        <button type="button" data-bs-target="#mainBanner" data-bs-slide-to="0" class="active"></button>
+        <button type="button" data-bs-target="#mainBanner" data-bs-slide-to="1"></button>
+        <button type="button" data-bs-target="#mainBanner" data-bs-slide-to="2"></button>
+    </div>
+    <div class="carousel-inner">
+        <div class="carousel-item active">
+            <img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" class="d-block w-100" alt="Banner 1">
+            <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded-3 p-3">
+                <h3 class="fw-bold">Khởi đầu đam mê Lập trình</h3>
+                <p>Học Python, Django, SQL từ cơ bản đến nâng cao.</p>
+            </div>
+        </div>
+        <div class="carousel-item">
+            <img src="https://images.unsplash.com/photo-1587620962725-abab7fe55159?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" class="d-block w-100" alt="Banner 2">
+            <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded-3 p-3">
+                <h3 class="fw-bold">Lộ trình bài bản</h3>
+                <p>Cam kết đầu ra, hỗ trợ 24/7 từ giảng viên.</p>
+            </div>
+        </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#mainBanner" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#mainBanner" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    </button>
+</div>
+
+<h3 class="fw-bold text-primary mb-4 border-start border-4 border-primary ps-3">Khóa học nổi bật</h3>
+
+<div class="row row-cols-1 row-cols-md-4 g-4 mb-5">
+    {% for c in courses %}
+    <div class="col">
+        <div class="card h-100 product-card">
+            <div class="position-relative">
+                {% if c.image %}
+                <img src="{{ c.image.url }}" class="card-img-top" alt="{{ c.title }}" style="height: 200px; object-fit: cover;">
+                {% else %}
+                <img src="https://via.placeholder.com/300x200?text=No+Image" class="card-img-top" alt="Chưa có ảnh">
+                {% endif %}
+
+                {% if c.price > 1000000 %}
+                <span class="position-absolute top-0 end-0 badge bg-danger m-2">HOT</span>
+                {% endif %}
+            </div>
+
+            <div class="card-body d-flex flex-column">
+                <h6 class="card-title fw-bold text-dark mb-2" style="min-height: 40px;">{{ c.title }}</h6>
+
+                <p class="small text-muted mb-3 flex-grow-1">
+                    {{ c.description|truncatewords:10 }}
+                </p>
+
+                <div class="d-flex justify-content-between align-items-center mt-auto">
+                    <span class="text-danger fw-bold fs-5">
+                        {% if c.price > 0 %}
+                        {{ c.price|intcomma }}đ
+                        {% else %}
+                        Miễn phí
+                        {% endif %}
+                    </span>
+
+                    <a href="{% url 'detail' c.id %}" class="btn btn-outline-primary btn-sm rounded-pill">Xem ngay</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

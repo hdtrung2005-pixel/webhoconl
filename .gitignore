@@ -1,0 +1,16 @@
+﻿# Bỏ qua thư mục cấu hình của VS Code (Nguyên nhân gây lỗi)
+.vs/
+.vscode/
+
+# Bỏ qua môi trường ảo và cache Python
+venv/
+env/
+__pycache__/
+*.pyc
+
+# Bỏ qua database (Không nên up db lên git)
+db.sqlite3
+db.sqlite3-journal
+
+# Bỏ qua file media người dùng upload
+media/
