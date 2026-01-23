@@ -6,7 +6,7 @@ from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required 
 from django.db.models import Q
 from django.core.paginator import Paginator
-from .forms import ProfileForm, ReviewForm 
+from .forms import ProfileForm, ReviewForm, CustomUserCreationForm
 
 # --- CÁC HÀM VIEW ---
 
@@ -33,15 +33,14 @@ def detail(request, course_id):
 
 def register(request):
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = CustomUserCreationForm(request.POST) # Dùng form mới ở đây
         if form.is_valid():
             user = form.save()
-            login(request, user)  
-            return redirect('home')  
+            login(request, user)
+            return redirect('home')
     else:
-        form = UserCreationForm()
+        form = CustomUserCreationForm()
     return render(request, 'app/register.html', {'form': form})
-
 def add_to_cart(request, course_id):
     cart = request.session.get('cart', {})
     course_id_str = str(course_id)

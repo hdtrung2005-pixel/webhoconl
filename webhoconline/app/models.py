@@ -3,20 +3,17 @@ from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.models import User
 # 1. Bảng User
 class User(AbstractUser):
-  
     id = models.AutoField(primary_key=True) 
-    # -------------------------------
-
+    
     ROLE_CHOICES = (
         ('student', 'Học viên'),
         ('teacher', 'Giảng viên'),
-        ('admin', 'Quản trị viên'),
     )
-    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='student', db_column='role', verbose_name="Vai trò")
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='student', verbose_name="Vai trò")
     full_name = models.CharField(max_length=255, null=True, blank=True, db_column='full_name', verbose_name="Họ và tên")
 
     class Meta:
-        managed = False
+        managed = True 
         db_table = 'User'
         verbose_name = "Người dùng"
 
