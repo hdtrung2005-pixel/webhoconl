@@ -11,6 +11,7 @@ class User(AbstractUser):
     )
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='student', verbose_name="Vai trò")
     full_name = models.CharField(max_length=255, null=True, blank=True, db_column='full_name', verbose_name="Họ và tên")
+    avatar = models.ImageField(upload_to='avatars/', null=True, blank=True, verbose_name="Ảnh đại diện")
 
     class Meta:
         managed = True 
@@ -61,13 +62,20 @@ class Course(models.Model):
 
     # Model lưu thông tin đơn hàng tổng quát
 class Order(models.Model):
-    # 1. Các lựa chọn (Choices)
-    STATUS_CHOICES = [
-        ('pending', 'Đang xử lý'),   # Lưu ý: viết thường toàn bộ key
-        ('completed', 'Đã hoàn thành'),
-        ('canceled', 'Đã hủy'),
-    ]
+    # ... các cột user, total_price giữ nguyên ...
+
+    # ĐỊNH NGHĨA CÁC TRẠNG THÁI (Key là Tiếng Anh, Label là Tiếng Việt)
+    STATUS_CHOICES = (
+        ('Pending', 'Đang xử lý'),   # Lưu 'Pending', hiện 'Đang xử lý'
+        ('Completed', 'Đã hoàn thành'),
+        ('Canceled', 'Đã hủy'),
+    )
     
+    status = models.CharField(
+        max_length=20, 
+        choices=STATUS_CHOICES, 
+        default='Pending' # Mặc định tạo ra là 'Pending' ngay
+    )  
     PAYMENT_CHOICES = [
         ('cod', 'Thanh toán khi nhận hàng (COD)'),
         ('banking', 'Chuyển khoản ngân hàng'),

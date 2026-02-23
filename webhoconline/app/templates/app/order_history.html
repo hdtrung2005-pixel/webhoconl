@@ -35,39 +35,35 @@
             <tbody>
                 {% for order in orders %}
                 <tr>
-                    <td class="text-center fw-bold text-secondary">#{{ order.id }}</td>
-                    <td class="text-center">{{ order.created_at|date:"d/m/Y H:i" }}</td>
-                    <td class="text-end fw-bold text-danger pe-4">{{ order.total_price|intcomma }}đ</td>
+                    <td>#{{ order.id }}</td>
+                    <td>{{ order.created_at|date:"d/m/Y H:i" }}</td>
+                    <td>{{ order.total_price|floatformat:0 }}đ</td>
 
-                    <td class="text-center">
-                        {% if order.payment_method == 'cod' %}
-                        <span class="badge bg-secondary rounded-pill px-3">Tiền mặt (COD)</span>
-                        {% else %}
-                        <span class="badge bg-info text-dark rounded-pill px-3">Chuyển khoản</span>
+                    <td>
+                        {% if order.status == 'Pending' %}
+                        <span class="badge bg-warning text-dark">Chờ xử lý</span>
+                        {% elif order.status == 'Completed' %}
+                        <span class="badge bg-success">Hoàn thành</span>
+                        {% elif order.status == 'Canceled' %}
+                        <span class="badge bg-danger">Đã hủy</span>
                         {% endif %}
                     </td>
 
-                    <td class="text-center">
-                        {% if order.status == 'pending' %}
-                        <span class="badge bg-warning text-dark border border-warning">⏳ Đang xử lý</span>
-                        {% elif order.status == 'completed' %}
-                        <span class="badge bg-success border border-success">✅ Hoàn thành</span>
-                        {% else %}
-                        <span class="badge bg-secondary border border-secondary">❌ Đã hủy</span>
-                        {% endif %}
-                    </td>
-
-                    <td class="text-center">
-                        {% if order.status == 'pending' %}
+                    <td>
+                        {% if order.status == 'Pending' %}
                         <a href="{% url 'cancel_order' order.id %}"
-                           class="btn btn-sm btn-outline-danger fw-bold"
-                           onclick="return confirm('Bạn có chắc chắn muốn hủy đơn hàng #{{ order.id }} không? Hành động này không thể hoàn tác.');">
+                           class="btn btn-sm btn-outline-danger"
+                           onclick="return confirm('Bạn có chắc chắn muốn hủy đơn hàng này không?');">
                             <i class="bi bi-x-circle"></i> Hủy đơn
                         </a>
                         {% else %}
                         <span class="text-muted small">--</span>
                         {% endif %}
                     </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center">Bạn chưa có đơn hàng nào.</td>
                 </tr>
                 {% endfor %}
             </tbody>

@@ -15,4 +15,5 @@ urlpatterns = [
     path('courses/', views.all_courses, name='all_courses'),
     path('roadmaps/', views.roadmap_list, name='roadmap_list'),
     path('roadmaps/<int:pk>/', views.roadmap_detail, name='roadmap_detail'),
+    path('cancel-order/<int:order_id>/', views.cancel_order, name='cancel_order'),
 ]

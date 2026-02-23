@@ -32,6 +32,9 @@ urlpatterns = [
     path('profile/', views.profile, name='profile'),
     path('course/<int:course_id>/lesson/<int:lesson_id>/', views.watch_lesson, name='watch_lesson'),
     path('cancel-order/<int:order_id>/', views.cancel_order, name='cancel_order'),
+    path('forgot-password/', views.forgot_password, name='forgot_password'),
+    path('verify-otp/', views.verify_otp, name='verify_otp'),
+    path('reset-password/', views.reset_password, name='reset_password'),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

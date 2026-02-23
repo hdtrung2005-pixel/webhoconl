@@ -136,3 +136,14 @@ LOGIN_URL = 'login'          # Chưa đăng nhập thì đá về trang login
 AUTH_USER_MODEL = 'app.User'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+# CẤU HÌNH ĐỊNH DẠNG SỐ VÀ TIỀN TỆ CHO TIẾNG VIỆT
+USE_THOUSAND_SEPARATOR = True
+THOUSAND_SEPARATOR = '.'
+DECIMAL_SEPARATOR = ','
+NUMBER_GROUPING = 3
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'hdtrung1712@gmail.com' # Ví dụ thế này # Thay bằng Gmail của bạn
+EMAIL_HOST_PASSWORD = 'lmyy wdmj rrfl umuk'

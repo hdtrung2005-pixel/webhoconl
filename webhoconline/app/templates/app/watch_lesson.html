@@ -17,24 +17,32 @@
             <div class="bg-light p-4 rounded shadow-sm mb-5">
                 <h4 class="fw-bold mb-4"><i class="bi bi-chat-dots-fill text-primary"></i> Đánh giá bài học</h4>
 
-                <form method="POST" class="mb-5">
+                <form method="POST" class="mb-5 border p-4 rounded bg-white shadow-sm">
                     {% csrf_token %}
+                    <h5 class="fw-bold mb-3"><i class="bi bi-pencil-square"></i> Viết cảm nhận của bạn</h5>
+
                     <div class="row">
-                        <div class="col-md-3 mb-3">
-                            <label class="fw-bold form-label">Số sao:</label>
-                            {{ form.rating }}
+                        <div class="col-md-4 mb-3">
+                            <label class="fw-bold form-label">Đánh giá sao:</label>
+                            <select name="rating" class="form-select" required>
+                                <option value="5" selected>⭐⭐⭐⭐⭐ (Tuyệt vời)</option>
+                                <option value="4">⭐⭐⭐⭐ (Tốt)</option>
+                                <option value="3">⭐⭐⭐ (Tạm được)</option>
+                                <option value="2">⭐⭐ (Tệ)</option>
+                                <option value="1">⭐ (Rất tệ)</option>
+                            </select>
                         </div>
+
                         <div class="col-md-12 mb-3">
-                            <label class="fw-bold form-label">Bình luận của bạn:</label>
-                            {{ form.comment }}
+                            <label class="fw-bold form-label">Bình luận chi tiết:</label>
+                            <textarea name="comment" class="form-control" rows="3" placeholder="Bài học này giúp ích gì cho bạn?..." required></textarea>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary px-4">
-                        <i class="bi bi-send-fill"></i> Gửi đánh giá
+
+                    <button type="submit" class="btn btn-primary px-4 fw-bold">
+                        <i class="bi bi-send-fill me-1"></i> Gửi đánh giá
                     </button>
                 </form>
-
-                <h5 class="fw-bold border-bottom pb-2 mb-3">Các đánh giá trước đó ({{ reviews.count }})</h5>
 
                 <div class="review-list">
                     {% for review in reviews %}

@@ -3,58 +3,87 @@
 {% block content %}
 <div class="container mt-5">
     <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card shadow-sm">
+        <div class="col-md-9">
+            <div class="card shadow-lg border-0">
                 <div class="card-header bg-primary text-white">
-                    <h4 class="mb-0"><i class="bi bi-person-circle"></i> Hồ sơ cá nhân</h4>
+                    <h4 class="mb-0 fw-bold"><i class="bi bi-person-circle"></i> Hồ sơ cá nhân</h4>
                 </div>
-                <div class="card-body p-4">
+                <div class="card-body p-5">
 
                     {% if messages %}
                     {% for message in messages %}
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        {{ message }}
+                        <i class="bi bi-check-circle-fill me-2"></i>{{ message }}
                         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                     </div>
                     {% endfor %}
                     {% endif %}
 
                     <div class="row">
-                        <div class="col-md-4 text-center mb-3">
-                            <div class="bg-light rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 120px; height: 120px;">
-                                <i class="bi bi-person text-secondary" style="font-size: 4rem;"></i>
+                        <div class="col-md-4 text-center mb-4 border-end pe-md-4">
+                            <div class="mb-3 position-relative d-inline-block">
+                                {% if user.avatar %}
+                                <img src="{{ user.avatar.url }}" class="rounded-circle shadow-sm border border-3 border-light"
+                                     style="width: 150px; height: 150px; object-fit: cover;">
+                                {% else %}
+                                <div class="bg-light rounded-circle d-flex align-items-center justify-content-center mx-auto shadow-sm"
+                                     style="width: 150px; height: 150px;">
+                                    <i class="bi bi-person text-secondary" style="font-size: 5rem;"></i>
+                                </div>
+                                {% endif %}
+                                <span class="position-absolute bottom-0 end-0 bg-success p-2 border border-light rounded-circle">
+                                    <span class="visually-hidden">Online</span>
+                                </span>
                             </div>
-                            <h5 class="fw-bold">{{ user.username }}</h5>
-                            <p class="text-muted small">Ngày tham gia: {{ user.date_joined|date:"d/m/Y" }}</p>
-                            <a href="{% url 'order_history' %}" class="btn btn-outline-primary btn-sm w-100">
-                                <i class="bi bi-clock-history"></i> Lịch sử mua hàng
+
+                            <h5 class="fw-bold mb-1">{{ user.username }}</h5>
+                            <p class="text-muted small mb-3">Thành viên từ: {{ user.date_joined|date:"d/m/Y" }}</p>
+
+                            <a href="{% url 'order_history' %}" class="btn btn-outline-primary w-100 rounded-pill">
+                                <i class="bi bi-clock-history me-1"></i> Lịch sử mua hàng
                             </a>
                         </div>
 
-                        <div class="col-md-8 border-start ps-md-4">
-                            <h5 class="mb-3 text-primary">Cập nhật thông tin</h5>
-                            <form method="POST">
+                        <div class="col-md-8 ps-md-4">
+                            <h5 class="mb-4 text-primary fw-bold">Cập nhật thông tin</h5>
+
+                            <form method="POST" enctype="multipart/form-data">
                                 {% csrf_token %}
 
                                 <div class="row mb-3">
                                     <div class="col-md-6">
-                                        <label class="form-label fw-bold">Họ đệm</label>
+                                        <label class="form-label fw-bold small text-muted">Họ đệm</label>
                                         {{ form.first_name }}
+                                        {% if form.first_name.errors %}
+                                        <div class="text-danger small mt-1 fw-bold"><i class="bi bi-exclamation-circle"></i> {{ form.first_name.errors.0 }}</div>
+                                        {% endif %}
                                     </div>
                                     <div class="col-md-6">
-                                        <label class="form-label fw-bold">Tên</label>
+                                        <label class="form-label fw-bold small text-muted">Tên</label>
                                         {{ form.last_name }}
+                                        {% if form.last_name.errors %}
+                                        <div class="text-danger small mt-1 fw-bold"><i class="bi bi-exclamation-circle"></i> {{ form.last_name.errors.0 }}</div>
+                                        {% endif %}
                                     </div>
                                 </div>
 
                                 <div class="mb-3">
-                                    <label class="form-label fw-bold">Email</label>
+                                    <label class="form-label fw-bold small text-muted">Email</label>
                                     {{ form.email }}
                                 </div>
 
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="bi bi-save"></i> Lưu thay đổi
-                                </button>
+                                <div class="mb-4">
+                                    <label class="form-label fw-bold small text-muted">Ảnh đại diện mới</label>
+                                    {{ form.avatar }}
+                                    {% if form.avatar.errors %}
+                                    <div class="text-danger small mt-1">{{ form.avatar.errors }}</div>
+                                    {% endif %}
+                                </div>
+                                <div class="d-flex justify-content-end">
+                                    <button type="submit" class="btn btn-primary px-4 fw-bold rounded-pill shadow-sm">
+                                        <i class="bi bi-save me-1"></i> Lưu thay đổi
+                                    </button>
+                                </div>
                             </form>
                         </div>
                     </div>

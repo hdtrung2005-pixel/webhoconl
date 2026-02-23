@@ -1,6 +1,7 @@
 ﻿from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from .models import User, LessonReview 
+from django.core.exceptions import ValidationError
 
 # 1. Form Đăng ký tài khoản 
 class CustomUserCreationForm(UserCreationForm):
@@ -23,18 +24,32 @@ class CustomUserCreationForm(UserCreationForm):
 class ProfileForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'email']
+        fields = ['first_name', 'last_name', 'email', 'avatar']
         labels = {
             'first_name': 'Họ đệm',
             'last_name': 'Tên',
             'email': 'Email',
+            'avatar': 'Ảnh đại diện',
         }
         widgets = {
             'first_name': forms.TextInput(attrs={'class': 'form-control'}),
             'last_name': forms.TextInput(attrs={'class': 'form-control'}),
             'email': forms.EmailInput(attrs={'class': 'form-control'}),
+            'avatar': forms.ClearableFileInput(attrs={'class': 'form-control'}),
         }
+    def clean_first_name(self):
+        first_name = self.cleaned_data.get('first_name', '')
+        # Kiểm tra xem trong chuỗi có chữ số nào không
+        if any(char.isdigit() for char in first_name):
+            raise ValidationError("Họ đệm không được chứa chữ số!")
+        return first_name
 
+    def clean_last_name(self):
+        last_name = self.cleaned_data.get('last_name', '')
+        # Kiểm tra xem trong chuỗi có chữ số nào không
+        if any(char.isdigit() for char in last_name):
+            raise ValidationError("Tên không được chứa chữ số!")
+        return last_name
 # 3. Form Đánh giá bài học 
 class ReviewForm(forms.ModelForm):
     class Meta:

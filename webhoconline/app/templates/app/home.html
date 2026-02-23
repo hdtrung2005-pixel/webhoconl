@@ -1,8 +1,6 @@
 ﻿{% extends 'app/base.html' %}
 {% load static %}
-{% load humanize %}   ```
-
-{% block title %}Trang chủ - Học Lập Trình{% endblock %}
+{% load humanize %} {% block title %}Trang chủ - Học Lập Trình{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -97,7 +95,7 @@
                 <div class="d-flex justify-content-between align-items-center mt-auto">
                     <span class="text-danger fw-bold fs-5">
                         {% if c.price > 0 %}
-                        {{ c.price|intcomma }}đ
+                        {{ c.price|floatformat:0|intcomma }}đ
                         {% else %}
                         Miễn phí
                         {% endif %}
