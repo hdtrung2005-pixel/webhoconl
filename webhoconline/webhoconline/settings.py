@@ -31,6 +31,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -124,7 +125,13 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# Nơi chứa các file CSS/JS tự viết của dự án
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -147,3 +154,64 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'hdtrung1712@gmail.com' # Ví dụ thế này # Thay bằng Gmail của bạn
 EMAIL_HOST_PASSWORD = 'lmyy wdmj rrfl umuk'
+BANK_CODE = 'MB'
+BANK_ACCOUNT_NUMBER = '0916536176'
+BANK_ACCOUNT_NAME = 'HA DUC TRUNG'
+# ==========================================
+# CẤU HÌNH GIAO DIỆN ADMIN JAZZMIN
+# ==========================================
+# ==========================================
+# CẤU HÌNH GIAO DIỆN ADMIN JAZZMIN
+# ==========================================
+JAZZMIN_SETTINGS = {
+    # Thông tin cơ bản
+    "site_title": "Admin Khóa Học",
+    "site_header": "Hệ Thống Quản Trị",
+    "site_brand": "Học Trực Tuyến",
+    "welcome_sign": "Chào mừng bạn đã quay trở lại!",
+    "copyright": "Học Lập Trình - Phát triển bởi Trung",
+    "show_version": False,
+    "show_ui_builder": False, # Đổi thành False để tắt cái bảng Customize bên trái
+    "custom_css": None,
+    "custom_js": None,
+    "use_google_fonts_cdn": True,
+    "show_ui_builder": False,
+    # Cài đặt Icon cho thanh Menu bên trái (Dùng thư viện FontAwesome)
+    "icons": {
+        "auth.Group": "fas fa-users-cog",
+        "app.User": "fas fa-user-graduate",       # Icon học viên
+        "app.Category": "fas fa-layer-group",     # Icon danh mục
+        "app.Course": "fas fa-book-open",         # Icon khóa học sách mở
+        "app.Lesson": "fas fa-play-circle",       # Icon bài giảng video
+        "app.Order": "fas fa-shopping-cart",      # Icon giỏ hàng/đơn hàng
+        "app.Roadmap": "fas fa-map-signs",        # Icon lộ trình
+    },
+    
+    # Bo góc các nút bấm cho hiện đại
+    "button_classes": {
+        "primary": "btn-primary rounded-pill",
+        "secondary": "btn-secondary rounded-pill",
+    },
+}
+
+# Cấu hình màu sắc mặc định (Tone tối sang trọng)
+# Cấu hình màu sắc nâng cao (Theme hiện đại, nút bo tròn nhẹ)
+JAZZMIN_UI_TWEAKS = {
+    "navbar": "navbar-white navbar-light", # Thanh điều hướng trên cùng sáng sủa
+    "font_family": "Segoe UI, Tahoma, Geneva, Verdana, sans-serif",
+    "theme": "litera", # Giao diện tối giản, sang trọng
+    "sidebar": "sidebar-dark-primary", # Cột trái màu tối để làm nổi bật Menu
+    "sidebar_nav_child_indent": True,
+    "sidebar_nav_compact_style": True, # Thu gọn khoảng cách menu cho tinh tế
+    "accent": "accent-primary",
+    
+    # Nút bấm có màu sắc chuẩn xác
+    "button_classes": {
+        "primary": "btn-primary",
+        "secondary": "btn-secondary",
+        "info": "btn-info",
+        "warning": "btn-warning",
+        "danger": "btn-danger",
+        "success": "btn-success"
+    }
+}

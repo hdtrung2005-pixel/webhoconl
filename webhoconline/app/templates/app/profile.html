@@ -1,95 +1,151 @@
 ﻿{% extends 'app/base.html' %}
+{% load static %}
+{% block title %}Hồ sơ cá nhân - Học Lập Trình{% endblock %}
 
 {% block content %}
-<div class="container mt-5">
+<div class="container mt-5 mb-5">
+    {% if messages %}
+    <div class="row justify-content-center mb-3">
+        <div class="col-md-10">
+            {% for message in messages %}
+            <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}success{% endif %} alert-dismissible fade show shadow-sm border-0" role="alert">
+                <strong>Thông báo:</strong> {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
     <div class="row justify-content-center">
-        <div class="col-md-9">
-            <div class="card shadow-lg border-0">
-                <div class="card-header bg-primary text-white">
-                    <h4 class="mb-0 fw-bold"><i class="bi bi-person-circle"></i> Hồ sơ cá nhân</h4>
-                </div>
-                <div class="card-body p-5">
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm border-0 rounded-4 text-center pb-4 transition-hover">
+                <div class="bg-primary rounded-top-4" style="height: 80px;"></div>
 
-                    {% if messages %}
-                    {% for message in messages %}
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        <i class="bi bi-check-circle-fill me-2"></i>{{ message }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                <div class="card-body" style="margin-top: -60px;">
+                    <div class="position-relative d-inline-block mb-3">
+                        {% if user.avatar %}
+                        <img src="{{ user.avatar.url }}" class="rounded-circle shadow bg-white" style="width: 140px; height: 140px; object-fit: cover; border: 4px solid #fff;">
+                        {% else %}
+                        <img src="https://ui-avatars.com/api/?name={{ user.username }}&background=0d6efd&color=fff&size=140&bold=true" class="rounded-circle shadow" style="width: 140px; height: 140px; border: 4px solid #fff;">
+                        {% endif %}
+                        <span class="position-absolute bottom-0 end-0 p-2 bg-success border border-light rounded-circle" title="Đang trực tuyến"></span>
                     </div>
-                    {% endfor %}
-                    {% endif %}
 
-                    <div class="row">
-                        <div class="col-md-4 text-center mb-4 border-end pe-md-4">
-                            <div class="mb-3 position-relative d-inline-block">
-                                {% if user.avatar %}
-                                <img src="{{ user.avatar.url }}" class="rounded-circle shadow-sm border border-3 border-light"
-                                     style="width: 150px; height: 150px; object-fit: cover;">
-                                {% else %}
-                                <div class="bg-light rounded-circle d-flex align-items-center justify-content-center mx-auto shadow-sm"
-                                     style="width: 150px; height: 150px;">
-                                    <i class="bi bi-person text-secondary" style="font-size: 5rem;"></i>
-                                </div>
-                                {% endif %}
-                                <span class="position-absolute bottom-0 end-0 bg-success p-2 border border-light rounded-circle">
-                                    <span class="visually-hidden">Online</span>
-                                </span>
-                            </div>
+                    <h4 class="fw-bold mb-1 text-dark">{{ user.full_name|default:user.username|title }}</h4>
+                    <p class="text-muted mb-3"><i class="bi bi-envelope-fill me-1 text-primary"></i> {{ user.email|default:"Chưa có Email" }}</p>
 
-                            <h5 class="fw-bold mb-1">{{ user.username }}</h5>
-                            <p class="text-muted small mb-3">Thành viên từ: {{ user.date_joined|date:"d/m/Y" }}</p>
+                    <p class="badge {% if user.role == 'teacher' %}bg-warning text-dark{% else %}bg-info text-dark{% endif %} rounded-pill px-3 py-2 mb-4 fw-bold">
+                        <i class="bi bi-person-badge me-1"></i> {% if user.role == 'teacher' %}Giảng viên{% else %}Học viên{% endif %}
+                    </p>
 
-                            <a href="{% url 'order_history' %}" class="btn btn-outline-primary w-100 rounded-pill">
-                                <i class="bi bi-clock-history me-1"></i> Lịch sử mua hàng
-                            </a>
-                        </div>
+                    <p class="small text-muted mb-4 border-bottom pb-3">Thành viên từ: <strong>{{ user.date_joined|date:"d/m/Y" }}</strong></p>
+                </div>
+            </div>
+        </div>
 
-                        <div class="col-md-8 ps-md-4">
-                            <h5 class="mb-4 text-primary fw-bold">Cập nhật thông tin</h5>
+        <div class="col-md-8">
+            <div class="card shadow-sm border-0 rounded-4 h-100">
+                <div class="card-header bg-white border-bottom pt-4 pb-0 ps-4">
+                    <ul class="nav nav-tabs card-header-tabs fw-bold" id="profileTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active text-primary" id="info-tab" data-bs-toggle="tab" data-bs-target="#info" type="button" role="tab" aria-selected="true">
+                                <i class="bi bi-person-lines-fill me-2"></i>Cập nhật thông tin
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link text-secondary" id="password-tab" data-bs-toggle="tab" data-bs-target="#password" type="button" role="tab" aria-selected="false">
+                                <i class="bi bi-shield-lock-fill me-2"></i>Đổi mật khẩu
+                            </button>
+                        </li>
+                    </ul>
+                </div>
 
+                <div class="card-body p-4">
+                    <div class="tab-content" id="profileTabsContent">
+
+                        <div class="tab-pane fade show active" id="info" role="tabpanel" aria-labelledby="info-tab">
                             <form method="POST" enctype="multipart/form-data">
                                 {% csrf_token %}
+                                <input type="hidden" name="action" value="update_info">
 
-                                <div class="row mb-3">
-                                    <div class="col-md-6">
-                                        <label class="form-label fw-bold small text-muted">Họ đệm</label>
-                                        {{ form.first_name }}
-                                        {% if form.first_name.errors %}
-                                        <div class="text-danger small mt-1 fw-bold"><i class="bi bi-exclamation-circle"></i> {{ form.first_name.errors.0 }}</div>
-                                        {% endif %}
+                                <div class="row mb-3 mt-2">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label fw-bold text-muted">Tên đăng nhập (Username)</label>
+                                        <input type="text" class="form-control bg-light" value="{{ user.username }}" disabled>
                                     </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label fw-bold small text-muted">Tên</label>
-                                        {{ form.last_name }}
-                                        {% if form.last_name.errors %}
-                                        <div class="text-danger small mt-1 fw-bold"><i class="bi bi-exclamation-circle"></i> {{ form.last_name.errors.0 }}</div>
-                                        {% endif %}
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label fw-bold">Họ và tên đầy đủ</label>
+                                        <input type="text" name="full_name" class="form-control border-primary" value="{{ user.full_name|default:'' }}" placeholder="Ví dụ: Nguyễn Văn A">
                                     </div>
-                                </div>
-
-                                <div class="mb-3">
-                                    <label class="form-label fw-bold small text-muted">Email</label>
-                                    {{ form.email }}
                                 </div>
 
                                 <div class="mb-4">
-                                    <label class="form-label fw-bold small text-muted">Ảnh đại diện mới</label>
-                                    {{ form.avatar }}
-                                    {% if form.avatar.errors %}
-                                    <div class="text-danger small mt-1">{{ form.avatar.errors }}</div>
-                                    {% endif %}
+                                    <label class="form-label fw-bold">Địa chỉ Email</label>
+                                    <input type="email" name="email" class="form-control" value="{{ user.email }}" required>
                                 </div>
-                                <div class="d-flex justify-content-end">
-                                    <button type="submit" class="btn btn-primary px-4 fw-bold rounded-pill shadow-sm">
-                                        <i class="bi bi-save me-1"></i> Lưu thay đổi
+
+                                <div class="mb-4 p-3 bg-light rounded-3 border border-dashed">
+                                    <label class="form-label fw-bold"><i class="bi bi-image me-1"></i>Ảnh đại diện mới</label>
+                                    <input class="form-control form-control-sm" type="file" name="avatar" accept="image/*">
+                                </div>
+
+                                <div class="d-flex justify-content-end border-top pt-4">
+                                    <button type="submit" class="btn btn-primary px-5 py-2 fw-bold rounded-pill shadow-sm">
+                                        <i class="bi bi-floppy-fill me-2"></i> Lưu thay đổi
                                     </button>
                                 </div>
                             </form>
                         </div>
+
+                        <div class="tab-pane fade" id="password" role="tabpanel" aria-labelledby="password-tab">
+                            <form method="POST">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="change_password">
+
+                                <div class="mb-4 mt-2">
+                                    <label class="form-label fw-bold">Mật khẩu hiện tại</label>
+                                    <input type="password" name="old_password" class="form-control" placeholder="Nhập mật khẩu đang dùng" required>
+                                </div>
+
+                                <div class="row mb-4">
+                                    <div class="col-md-6 mb-3 mb-md-0">
+                                        <label class="form-label fw-bold text-danger">Mật khẩu mới</label>
+                                        <input type="password" name="new_password" class="form-control border-danger" placeholder="Ít nhất 6 ký tự" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold text-danger">Xác nhận mật khẩu mới</label>
+                                        <input type="password" name="confirm_password" class="form-control border-danger" placeholder="Nhập lại mật khẩu mới" required>
+                                    </div>
+                                </div>
+
+                                <div class="d-flex justify-content-end border-top pt-4">
+                                    <button type="submit" class="btn btn-danger px-5 py-2 fw-bold rounded-pill shadow-sm">
+                                        <i class="bi bi-shield-lock me-2"></i> Xác nhận Đổi mật khẩu
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<style>
+    .transition-hover {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .transition-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15) !important;
+        }
+
+    .border-dashed {
+        border-style: dashed !important;
+    }
+</style>
 {% endblock %}

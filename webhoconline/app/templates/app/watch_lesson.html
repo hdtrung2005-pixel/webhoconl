@@ -1,30 +1,56 @@
 ﻿{% extends 'app/base.html' %}
 
 {% block content %}
-<div class="container-fluid mt-4">
+<div class="container-fluid mt-4 mb-5">
     <div class="row">
-        <div class="col-md-8">
-            <div class="ratio ratio-16x9 shadow-lg mb-3">
-                <iframe src="https://www.youtube.com/embed/{{ current_lesson.video_id }}?rel=0"
-                        title="YouTube video player" allowfullscreen>
+        <div class="col-lg-8 col-md-12 mb-4">
+            <div class="ratio ratio-16x9 shadow-lg mb-4 rounded overflow-hidden bg-black position-relative">
+                <iframe id="lessonVideo"
+                        src="{{ current_lesson.get_embed_url }}?enablejsapi=1&rel=0"
+                        title="YouTube video player"
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        referrerpolicy="strict-origin-when-cross-origin"
+                        allowfullscreen>
                 </iframe>
             </div>
-            <h3 class="fw-bold">{{ current_lesson.title }}</h3>
-            <p class="text-muted">{{ course.title }}</p>
+            <div class="modal fade" id="resumeModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content border-0 shadow-lg" style="border-radius: 15px;">
+                        <div class="modal-body text-center p-5">
+                            <i class="bi bi-clock-history text-primary mb-3" style="font-size: 3rem;"></i>
+                            <h4 class="fw-bold mb-3">Chào mừng bạn trở lại!</h4>
+                            <p class="text-muted mb-4 fs-6">
+                                Hệ thống phát hiện bạn đang học dở bài này ở <strong id="timeDisplay" class="text-danger"></strong>.<br>Bạn muốn tiếp tục hay học lại từ đầu?
+                            </p>
+                            <div class="d-flex justify-content-center gap-3">
+                                <button type="button" class="btn btn-outline-secondary px-4 fw-bold rounded-pill" onclick="restartVideo()">
+                                    <i class="bi bi-arrow-counterclockwise"></i> Xem lại từ đầu
+                                </button>
+                                <button type="button" class="btn btn-primary px-4 fw-bold rounded-pill shadow" onclick="resumeVideo()">
+                                    <i class="bi bi-play-circle-fill"></i> Học tiếp ngay
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <h3 class="fw-bold text-dark">{{ current_lesson.title }}</h3>
+            <p class="text-secondary fs-5"><i class="bi bi-journal-bookmark-fill me-2 text-primary"></i>Thuộc khóa học: <span class="fw-bold">{{ course.title }}</span></p>
 
             <hr class="my-4">
 
             <div class="bg-light p-4 rounded shadow-sm mb-5">
-                <h4 class="fw-bold mb-4"><i class="bi bi-chat-dots-fill text-primary"></i> Đánh giá bài học</h4>
+                <h4 class="fw-bold mb-4"><i class="bi bi-chat-dots-fill text-primary me-2"></i>Đánh giá bài học</h4>
 
                 <form method="POST" class="mb-5 border p-4 rounded bg-white shadow-sm">
                     {% csrf_token %}
-                    <h5 class="fw-bold mb-3"><i class="bi bi-pencil-square"></i> Viết cảm nhận của bạn</h5>
+                    <h5 class="fw-bold mb-3"><i class="bi bi-pencil-square text-warning me-2"></i>Viết cảm nhận của bạn</h5>
 
                     <div class="row">
-                        <div class="col-md-4 mb-3">
+                        <div class="col-md-5 mb-3">
                             <label class="fw-bold form-label">Đánh giá sao:</label>
-                            <select name="rating" class="form-select" required>
+                            <select name="rating" class="form-select border-warning" required>
                                 <option value="5" selected>⭐⭐⭐⭐⭐ (Tuyệt vời)</option>
                                 <option value="4">⭐⭐⭐⭐ (Tốt)</option>
                                 <option value="3">⭐⭐⭐ (Tạm được)</option>
@@ -35,11 +61,11 @@
 
                         <div class="col-md-12 mb-3">
                             <label class="fw-bold form-label">Bình luận chi tiết:</label>
-                            <textarea name="comment" class="form-control" rows="3" placeholder="Bài học này giúp ích gì cho bạn?..." required></textarea>
+                            <textarea name="comment" class="form-control" rows="3" placeholder="Bài học này giúp ích gì cho bạn? Hãy chia sẻ nhé..." required></textarea>
                         </div>
                     </div>
 
-                    <button type="submit" class="btn btn-primary px-4 fw-bold">
+                    <button type="submit" class="btn btn-primary px-4 fw-bold shadow-sm">
                         <i class="bi bi-send-fill me-1"></i> Gửi đánh giá
                     </button>
                 </form>
@@ -48,10 +74,10 @@
                     {% for review in reviews %}
                     <div class="card mb-3 border-0 shadow-sm">
                         <div class="card-body">
-                            <div class="d-flex justify-content-between">
+                            <div class="d-flex justify-content-between align-items-center">
                                 <div>
-                                    <strong class="text-primary"><i class="bi bi-person-circle"></i> {{ review.user.username }}</strong>
-                                    <span class="ms-2 text-warning">
+                                    <strong class="text-primary fs-6"><i class="bi bi-person-circle me-1"></i> {{ review.user.username }}</strong>
+                                    <span class="ms-2 text-warning" style="font-size: 0.9rem;">
                                         {% for i in "12345" %}
                                         {% if forloop.counter <= review.rating %}
                                         <i class="bi bi-star-fill"></i>
@@ -61,30 +87,44 @@
                                         {% endfor %}
                                     </span>
                                 </div>
-                                <small class="text-muted">{{ review.created_at|date:"d/m/Y H:i" }}</small>
+                                <small class="text-muted"><i class="bi bi-clock me-1"></i>{{ review.created_at|date:"d/m/Y H:i" }}</small>
                             </div>
                             <p class="card-text mt-2 text-dark">{{ review.comment }}</p>
                         </div>
                     </div>
                     {% empty %}
-                    <p class="text-center text-muted py-3">Chưa có đánh giá nào. Hãy là người đầu tiên!</p>
+                    <div class="text-center py-4 bg-white rounded border border-dashed">
+                        <i class="bi bi-chat-square-quote text-muted fs-1"></i>
+                        <p class="text-muted mt-2 mb-0">Chưa có đánh giá nào. Hãy là người đầu tiên!</p>
+                    </div>
                     {% endfor %}
                 </div>
             </div>
         </div>
 
-        <div class="col-md-4">
-            <div class="card shadow-sm" style="height: 500px;">
-                <div class="card-header bg-dark text-white fw-bold">
-                    Nội dung khóa học
+        <div class="col-lg-4 col-md-12">
+            <div class="card shadow-sm position-sticky" style="top: 20px;">
+                <div class="card-header bg-dark text-white fw-bold d-flex justify-content-between align-items-center">
+                    <span><i class="bi bi-list-ul me-2"></i>Nội dung khóa học</span>
+                    <span class="badge bg-light text-dark">{{ lessons.count }} Bài</span>
                 </div>
-                <div class="list-group list-group-flush overflow-auto">
+
+                <div class="list-group list-group-flush overflow-auto" style="max-height: 70vh;">
                     {% for item in lessons %}
                     <a href="{% url 'watch_lesson' course.id item.id %}"
-                       class="list-group-item list-group-item-action {% if item.id == current_lesson.id %}active{% endif %}">
-                        <div class="d-flex w-100 justify-content-between">
-                            <h6 class="mb-1">Bài {{ item.order }}: {{ item.title }}</h6>
-                            <small>{{ item.duration }}p</small>
+                       class="list-group-item list-group-item-action py-3 {% if item.id == current_lesson.id %}active bg-primary text-white border-primary{% else %}text-dark{% endif %}">
+                        <div class="d-flex w-100 justify-content-between align-items-center">
+                            <h6 class="mb-0 fw-bold" style="line-height: 1.4;">
+                                {% if item.id == current_lesson.id %}
+                                <i class="bi bi-play-circle-fill me-1"></i>
+                                {% else %}
+                                <i class="bi bi-play-circle me-1 text-muted"></i>
+                                {% endif %}
+                                Bài {{ item.order }}: {{ item.title }}
+                            </h6>
+                            <span class="badge {% if item.id == current_lesson.id %}bg-light text-primary{% else %}bg-secondary{% endif %} rounded-pill" style="font-size: 0.75rem;">
+                                {{ item.duration }}p
+                            </span>
                         </div>
                     </a>
                     {% endfor %}
@@ -93,4 +133,70 @@
         </div>
     </div>
 </div>
+<script src="https://www.youtube.com/iframe_api"></script>
+<script>
+    var player;
+    var savedTime = 0;
+    // Tạo 1 chìa khóa riêng biệt cho Từng User + Từng Khóa + Từng Bài (Tránh bị lẫn lộn)
+    var storageKey = 'user_{{ request.user.id }}_course_{{ course.id }}_lesson_{{ current_lesson.id }}';
+
+    // Hàm này được YouTube gọi tự động khi thư viện load xong
+    function onYouTubeIframeAPIReady() {
+        player = new YT.Player('lessonVideo', {
+            events: {
+                'onReady': onPlayerReady
+            }
+        });
+    }
+
+    // Khi video tải xong
+    function onPlayerReady(event) {
+        // Lấy thời gian xem dở trong bộ nhớ (nếu có)
+        savedTime = parseFloat(localStorage.getItem(storageKey));
+
+        // Nếu đã xem qua giây thứ 5 thì mới hiện Popup hỏi
+        if (savedTime && savedTime > 5) {
+            // Đổi số giây thành phút:giây cho đẹp (VD: 1:30)
+            var minutes = Math.floor(savedTime / 60);
+            var seconds = Math.floor(savedTime % 60);
+            document.getElementById('timeDisplay').innerText = `phút ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+
+            // Bật cái Popup hỏi người dùng lên
+            var myModal = new bootstrap.Modal(document.getElementById('resumeModal'));
+            myModal.show();
+        }
+    }
+
+    // ÂM THẦM LƯU THỜI GIAN 3 GIÂY/LẦN
+    setInterval(function() {
+        // Kiểm tra xem video có đang phát không (PlayerState == 1 là đang phát)
+        if (player && typeof player.getPlayerState === "function" && player.getPlayerState() == 1) {
+            var currentTime = player.getCurrentTime();
+            // Lưu xuống LocalStorage của trình duyệt
+            localStorage.setItem(storageKey, currentTime);
+        }
+    }, 3000);
+
+    // XỬ LÝ NÚT BẤM CỦA NGƯỜI DÙNG
+    function resumeVideo() {
+        // Tua đến chỗ xem dở và phát
+        player.seekTo(savedTime, true);
+        player.playVideo();
+        // Tắt Popup
+        var myModalEl = document.getElementById('resumeModal');
+        var modal = bootstrap.Modal.getInstance(myModalEl);
+        modal.hide();
+    }
+
+    function restartVideo() {
+        // Tua về số 0, xóa bộ nhớ và phát
+        player.seekTo(0, true);
+        localStorage.removeItem(storageKey);
+        player.playVideo();
+        // Tắt Popup
+        var myModalEl = document.getElementById('resumeModal');
+        var modal = bootstrap.Modal.getInstance(myModalEl);
+        modal.hide();
+    }
+</script>
 {% endblock %}

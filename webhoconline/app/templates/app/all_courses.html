@@ -1,80 +1,163 @@
 ﻿{% extends 'app/base.html' %}
 {% load humanize %}
+{% block title %}Tất cả khóa học - Học Lập Trình{% endblock %}
 
 {% block content %}
-<div class="container mt-5">
+<div class="bg-primary bg-gradient text-white py-4 mb-5 shadow-sm" style="margin-top: -1.5rem;">
+    <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center">
+        <h2 class="fw-bold mb-3 mb-md-0"><i class="bi bi-journal-code text-warning me-2"></i>Khám phá Khóa học</h2>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}" class="text-white text-decoration-none opacity-75 hover-opacity-100">Trang chủ</a></li>
+                <li class="breadcrumb-item active text-light fw-bold" aria-current="page">Tất cả khóa học</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<div class="container mb-5 pb-5">
     <div class="row">
-        <div class="col-md-3 mb-4">
-            <div class="card shadow-sm border-0">
-                <div class="card-header bg-primary text-white fw-bold">
-                    <i class="bi bi-list-ul"></i> Danh mục
+        <div class="col-lg-3 mb-4 mb-lg-0">
+            <div class="card border-0 shadow-sm rounded-4 position-sticky" style="top: 20px;">
+                <div class="card-header bg-white border-bottom-0 pt-4 pb-2 ps-4">
+                    <h5 class="fw-bold text-dark mb-0"><i class="bi bi-list-stars text-primary me-2"></i>Danh mục</h5>
                 </div>
-                <div class="list-group list-group-flush">
-                    <a href="{% url 'all_courses' %}" class="list-group-item list-group-item-action {% if not current_cate %}active fw-bold{% endif %}">
-                        Tất cả
-                    </a>
-                    {% for cate in categories %}
-                    <a href="?category={{ cate.id }}" class="list-group-item list-group-item-action {% if current_cate == cate.id|stringformat:'s' %}active fw-bold{% endif %}">
-                        {{ cate.name }}
-                    </a>
-                    {% endfor %}
+                <div class="card-body p-3">
+                    <div class="list-group list-group-flush gap-1">
+                        <a href="{% url 'all_courses' %}" class="list-group-item list-group-item-action border-0 rounded-3 {% if not current_cate %}active bg-primary text-white shadow-sm{% else %}text-secondary hover-bg-light{% endif %} fw-bold px-3 py-2">
+                            <i class="bi bi-grid-fill me-2"></i>Tất cả khóa học
+                        </a>
+                        
+                        {% for cate in categories %}
+                        <a href="?category={{ cate.id }}" class="list-group-item list-group-item-action border-0 rounded-3 {% if current_cate == cate.id|stringformat:'s' %}active bg-primary text-white shadow-sm{% else %}text-secondary hover-bg-light{% endif %} fw-bold px-3 py-2">
+                            <i class="bi bi-folder-fill me-2 {% if current_cate == cate.id|stringformat:'s' %}text-warning{% else %}text-muted{% endif %}"></i>{{ cate.name }}
+                        </a>
+                        {% endfor %}
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-9">
-            <h3 class="mb-4 fw-bold border-bottom pb-2">
-                {% if current_cate %}
-                Đang lọc theo danh mục...
-                {% else %}
-                Tất cả khóa học
-                {% endif %}
-            </h3>
+        <div class="col-lg-9">
+            <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-2">
+                <h4 class="fw-bold text-dark mb-0">
+                    {% if current_cate %}
+                        Khóa học theo danh mục
+                    {% else %}
+                        Tất cả khóa học
+                    {% endif %}
+                </h4>
+                <span class="badge bg-light text-dark border px-3 py-2 rounded-pill shadow-sm">Có {{ page_obj.object_list|length }} khóa học</span>
+            </div>
 
-            <div class="row row-cols-1 row-cols-md-3 g-4">
-                {% for course in page_obj %}
+            <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4 mb-5">
+                {% for c in page_obj %}
                 <div class="col">
-                    <div class="card h-100 shadow-sm hover-shadow transition">
-                        {% if course.image %}
-                        <img src="{{ course.image.url }}" class="card-img-top" alt="{{ course.title }}" style="height: 180px; object-fit: cover;">
-                        {% endif %}
-                        <div class="card-body d-flex flex-column">
-                            <h5 class="card-title text-truncate">{{ course.title }}</h5>
-                            <p class="card-text text-muted small">{{ course.description|truncatewords:15 }}</p>
-                            <div class="mt-auto d-flex justify-content-between align-items-center">
-                                <span class="text-danger fw-bold">{{ course.price|intcomma }}đ</span>
-                                <a href="{% url 'detail' course.id %}" class="btn btn-sm btn-outline-primary">Chi tiết</a>
+                    <div class="card h-100 border-0 shadow-sm rounded-4 transition-hover bg-white">
+                        <div class="position-relative">
+                            {% if c.image %}
+                            <img src="{{ c.image.url }}" class="card-img-top" alt="{{ c.title }}" style="height: 180px; object-fit: cover; border-top-left-radius: 15px; border-top-right-radius: 15px;">
+                            {% else %}
+                            <img src="https://via.placeholder.com/300x200?text=No+Image" class="card-img-top" alt="Chưa có ảnh" style="height: 180px; object-fit: cover; border-top-left-radius: 15px; border-top-right-radius: 15px;">
+                            {% endif %}
+
+                            {% if c.price > 1000000 %}
+                            <span class="position-absolute top-0 end-0 badge bg-danger m-3 shadow-sm pulse-zalo px-2 py-1">HOT</span>
+                            {% endif %}
+                            
+                            {% if c.category %}
+                            <span class="position-absolute bottom-0 start-0 badge bg-dark bg-opacity-75 m-2 shadow-sm"><i class="bi bi-tag-fill text-warning me-1"></i>{{ c.category.name }}</span>
+                            {% endif %}
+                        </div>
+
+                        <div class="card-body d-flex flex-column pt-3">
+                            <h6 class="card-title fw-bold text-dark mb-2" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.4; height: 2.8em;">
+                                {{ c.title }}
+                            </h6>
+
+                            <p class="small text-muted mb-3 flex-grow-1" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                                {{ c.description }}
+                            </p>
+
+                            <div class="d-flex justify-content-between align-items-center mt-auto border-top pt-3">
+                                <span class="text-danger fw-bold fs-5">
+                                    {% if c.price > 0 %}
+                                    {{ c.price|floatformat:0|intcomma }}đ
+                                    {% else %}
+                                    <span class="text-success">Miễn phí</span>
+                                    {% endif %}
+                                </span>
+
+                                <a href="{% url 'detail' c.id %}" class="btn btn-outline-primary btn-sm rounded-pill fw-bold px-3 shadow-sm">Chi tiết</a>
                             </div>
                         </div>
                     </div>
                 </div>
                 {% empty %}
-                <div class="col-12 text-center py-5">
-                    <p class="text-muted">Chưa có khóa học nào trong danh mục này.</p>
+                <div class="col-12 w-100 text-center py-5">
+                    <div class="alert alert-light border border-dashed rounded-4 p-5 shadow-sm">
+                        <i class="bi bi-search fs-1 text-muted mb-3 d-block"></i>
+                        <h5 class="text-muted fw-bold">Chưa có khóa học nào!</h5>
+                        <p class="text-muted mb-4">Hiện tại danh mục này đang trống, bạn vui lòng xem các khóa học khác nhé.</p>
+                        <a href="{% url 'all_courses' %}" class="btn btn-primary rounded-pill px-4 fw-bold">Xem tất cả khóa học</a>
+                    </div>
                 </div>
                 {% endfor %}
             </div>
 
             {% if page_obj.has_other_pages %}
-            <nav class="mt-5">
-                <ul class="pagination justify-content-center">
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center border-0">
                     {% if page_obj.has_previous %}
                     <li class="page-item">
-                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if current_cate %}&category={{ current_cate }}{% endif %}">Trước</a>
+                        <a class="page-link rounded-pill shadow-sm me-2 fw-bold text-primary border-0" href="?page={{ page_obj.previous_page_number }}{% if current_cate %}&category={{ current_cate }}{% endif %}">
+                            <i class="bi bi-chevron-left"></i> Trước
+                        </a>
                     </li>
                     {% endif %}
 
-                    <li class="page-item active"><span class="page-link">{{ page_obj.number }}</span></li>
+                    {% for num in page_obj.paginator.page_range %}
+                        {% if page_obj.number == num %}
+                        <li class="page-item active"><span class="page-link rounded-circle shadow-sm mx-1 fw-bold bg-primary border-primary" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">{{ num }}</span></li>
+                        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                        <li class="page-item"><a class="page-link rounded-circle shadow-sm mx-1 text-dark border-0 hover-bg-light" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;" href="?page={{ num }}{% if current_cate %}&category={{ current_cate }}{% endif %}">{{ num }}</a></li>
+                        {% endif %}
+                    {% endfor %}
 
                     {% if page_obj.has_next %}
                     <li class="page-item">
-                        <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if current_cate %}&category={{ current_cate }}{% endif %}">Sau</a>
+                        <a class="page-link rounded-pill shadow-sm ms-2 fw-bold text-primary border-0" href="?page={{ page_obj.next_page_number }}{% if current_cate %}&category={{ current_cate }}{% endif %}">
+                            Sau <i class="bi bi-chevron-right"></i>
+                        </a>
                     </li>
                     {% endif %}
                 </ul>
             </nav>
             {% endif %}
+            
         </div>
     </div>
 </div>
+
+<style>
+    .transition-hover {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .transition-hover:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 24px rgba(0,0,0,0.12) !important;
+        border-color: #0d6efd !important;
+    }
+    .hover-bg-light {
+        transition: all 0.2s;
+    }
+    .hover-bg-light:hover {
+        background-color: #f8f9fa !important;
+        color: #0d6efd !important;
+        transform: translateX(5px); /* Hiệu ứng đẩy nhẹ menu sang phải khi hover */
+    }
+    .border-dashed {
+        border-style: dashed !important;
+    }
+</style>
 {% endblock %}

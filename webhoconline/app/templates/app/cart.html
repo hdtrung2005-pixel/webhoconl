@@ -1,93 +1,199 @@
 ﻿{% extends 'app/base.html' %}
 {% load humanize %}
+{% block title %}Giỏ hàng của bạn - Học Lập Trình{% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-    <h2 class="mb-4">Giỏ hàng của bạn</h2>
+<div class="bg-primary bg-gradient text-white py-4 mb-5 shadow-sm" style="margin-top: -1.5rem;">
+    <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center">
+        <h2 class="fw-bold mb-0"><i class="bi bi-cart-check-fill text-warning me-2"></i>Giỏ hàng của bạn</h2>
+        <span class="badge bg-light text-primary fs-6 mt-3 mt-md-0 rounded-pill px-3 py-2 shadow-sm">
+            <i class="bi bi-bag-fill me-1"></i> Đang có {{ cart_items|length }} khóa học
+        </span>
+    </div>
+</div>
 
+<div class="container mb-5 pb-5">
     {% if cart_items %}
-    <table class="table table-bordered align-middle">
-        <thead class="table-light">
-            <tr>
-                <th>Sản phẩm</th>
-                <th>Đơn giá</th>
-                <th>Số lượng</th>
-                <th>Thành tiền</th>
-                <th>Hành động</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for item in cart_items %}
-            <tr>
-                <td>
-                    <div class="d-flex align-items-center">
-                        {% if item.course.image %}
-                        <img src="{{ item.course.image.url }}" style="width: 50px; height: 50px; object-fit: cover;" class="me-3 rounded">
-                        {% endif %}
-                        <span class="fw-bold">{{ item.course.title }}</span>
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm rounded-4 h-100">
+                <div class="card-header bg-white border-bottom-0 pt-4 pb-2 ps-4">
+                    <h5 class="fw-bold text-dark mb-0">Chi tiết sản phẩm</h5>
+                </div>
+                <div class="card-body p-4">
+
+                    {% for item in cart_items %}
+                    <div class="row align-items-center mb-4 pb-4 {% if not forloop.last %}border-bottom{% endif %} transition-hover-light">
+                        <div class="col-md-3 col-4 mb-3 mb-md-0">
+                            {% if item.course.image %}
+                            <img src="{{ item.course.image.url }}" class="img-fluid rounded-3 shadow-sm w-100" style="height: 90px; object-fit: cover;" alt="{{ item.course.title }}">
+                            {% else %}
+                            <img src="https://via.placeholder.com/150x90?text=No+Image" class="img-fluid rounded-3 shadow-sm w-100" style="height: 90px; object-fit: cover;">
+                            {% endif %}
+                        </div>
+
+                        <div class="col-md-6 col-8">
+                            <h5 class="fw-bold text-dark mb-1 fs-6">{{ item.course.title }}</h5>
+                            <p class="text-muted small mb-2"><i class="bi bi-person-video3 me-1"></i>Giảng viên: Admin</p>
+                            <span class="badge bg-info bg-opacity-10 text-info border border-info rounded-pill px-2">Học trọn đời</span>
+                        </div>
+
+                        <div class="col-md-3 col-12 text-md-end mt-3 mt-md-0 d-flex flex-md-column justify-content-between align-items-md-end">
+                            <h5 class="fw-bold text-danger mb-0">{{ item.course.price|floatformat:0|intcomma }}đ</h5>
+                            <a href="{% url 'remove_from_cart' item.course.id %}" class="btn btn-sm btn-outline-danger rounded-pill mt-2" title="Xóa khỏi giỏ">
+                                <i class="bi bi-trash3-fill"></i> <span class="d-md-none ms-1">Xóa</span>
+                            </a>
+                        </div>
                     </div>
-                </td>
-                <td>{{ item.course.price|intcomma }}đ</td>
-                <td>{{ item.quantity }}</td>
-                <td class="fw-bold text-primary">{{ item.subtotal|intcomma }}đ</td>
+                    {% endfor %}
 
-                <td class="text-center">
-                    <a href="{% url 'remove_from_cart' item.course.id %}" class="btn btn-outline-danger btn-sm" onclick="return confirm('Bạn có chắc muốn xóa không?')">
-                        <i class="bi bi-trash"></i> Xóa
-                    </a>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-
-    <div class="row mt-4">
-        <div class="col-md-6">
-            <a href="{% url 'home' %}" class="btn btn-outline-secondary">
-                <i class="bi bi-arrow-left"></i> Tiếp tục mua sắm
-            </a>
+                </div>
+            </div>
         </div>
 
-        <div class="col-md-6">
-            <div class="bg-light p-4 rounded shadow-sm">
-                <h4 class="mb-3">Thông tin thanh toán</h4>
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-lg rounded-4 position-sticky" style="top: 20px;">
+                <div class="card-header bg-primary text-white border-bottom-0 pt-4 pb-3 rounded-top-4 text-center">
+                    <h5 class="fw-bold mb-0"><i class="bi bi-receipt me-2"></i>Tổng Thanh Toán</h5>
+                </div>
 
-                <form action="{% url 'checkout' %}" method="POST">
-                    {% csrf_token %}
-
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Chọn phương thức:</label>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="payment_method" id="cod" value="cod" checked>
-                            <label class="form-check-label" for="cod">
-                                <i class="bi bi-cash-coin"></i> Thanh toán khi nhận hàng (COD)
-                            </label>
-                        </div>
-                        <div class="form-check mt-2">
-                            <input class="form-check-input" type="radio" name="payment_method" id="banking" value="banking">
-                            <label class="form-check-label" for="banking">
-                                <i class="bi bi-bank"></i> Chuyển khoản ngân hàng (QR Code)
-                            </label>
-                        </div>
+                <div class="card-body p-4 bg-light rounded-bottom-4">
+                    <div class="d-flex justify-content-between mb-3 text-muted">
+                        <span>Tạm tính:</span>
+                        <span class="fw-bold">{{ total_price|floatformat:0|intcomma }}đ</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-3 text-success">
+                        <span>Giảm giá:</span>
+                        <span class="fw-bold">0đ</span>
+                    </div>
+                    <hr class="border-secondary opacity-25">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <span class="fw-bold text-dark fs-5">Tổng cộng:</span>
+                        <span class="fw-bold text-danger fs-3">{{ total_price|floatformat:0|intcomma }}đ</span>
                     </div>
 
-                    <div class="d-flex justify-content-between align-items-center mt-4 border-top pt-3">
-                        <h4 class="mb-0">Tổng: <span class="text-danger fw-bold">{{ total_price|intcomma }}đ</span></h4>
-                        <button type="submit" class="btn btn-success btn-lg">
-                            <i class="bi bi-check-circle"></i> Đặt hàng
+                    <form method="POST" action="{% url 'checkout' %}">
+                        {% csrf_token %}
+                        <h6 class="fw-bold text-dark mb-3">Chọn phương thức thanh toán:</h6>
+
+                        <label class="payment-method-card w-100 mb-2">
+                            <input type="radio" name="payment_method" value="banking" class="d-none" checked>
+                            <div class="card-body d-flex align-items-center border rounded-3 p-3 bg-white cursor-pointer transition-all">
+                                <i class="bi bi-qr-code-scan fs-3 text-primary me-3"></i>
+                                <div>
+                                    <h6 class="fw-bold mb-0 text-dark">Chuyển khoản QR Ngân hàng</h6>
+                                    <small class="text-muted">Nhanh chóng, tự động duyệt</small>
+                                </div>
+                                <i class="bi bi-check-circle-fill text-success ms-auto check-icon fs-5"></i>
+                            </div>
+                        </label>
+
+                        <label class="payment-method-card w-100 mb-4">
+                            <input type="radio" name="payment_method" value="momo" class="d-none">
+                            <div class="card-body d-flex align-items-center border rounded-3 p-3 bg-white cursor-pointer transition-all">
+                                <img src="https://upload.wikimedia.org/wikipedia/vi/f/fe/MoMo_Logo.png" style="width: 30px; height: 30px; object-fit: contain;" class="me-3">
+                                <div>
+                                    <h6 class="fw-bold mb-0 text-dark">Thanh toán Ví MoMo</h6>
+                                    <small class="text-muted">Quét mã tiện lợi</small>
+                                </div>
+                                <i class="bi bi-check-circle-fill text-success ms-auto check-icon fs-5"></i>
+                            </div>
+                        </label>
+
+                        <button type="submit" class="btn btn-danger btn-lg w-100 rounded-pill fw-bold shadow pulse-btn py-3">
+                            <i class="bi bi-shield-lock-fill me-2 text-warning"></i> THANH TOÁN NGAY
                         </button>
-                    </div>
-                </form>
+                        <p class="text-center small text-muted mt-3 mb-0"><i class="bi bi-lock-fill text-success"></i> Thanh toán bảo mật an toàn 100%</p>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
 
     {% else %}
-    <div class="text-center py-5">
-        <i class="bi bi-cart-x display-1 text-muted"></i>
-        <p class="mt-3 fs-5 text-muted">Giỏ hàng của bạn đang trống.</p>
-        <a href="{% url 'home' %}" class="btn btn-primary mt-3">Mua sắm ngay</a>
+    <div class="row justify-content-center">
+        <div class="col-md-6 text-center py-5">
+            <img src="https://cdn-icons-png.flaticon.com/512/11329/11329060.png" class="img-fluid mb-4 opacity-75" style="max-width: 200px;" alt="Empty Cart">
+            <h3 class="fw-bold text-dark mb-3">Giỏ hàng của bạn đang trống!</h3>
+            <p class="text-muted mb-4 fs-5">Có vẻ như bạn chưa chọn khóa học nào. Hãy khám phá hàng trăm khóa học cực chất của chúng tôi nhé!</p>
+            <a href="{% url 'all_courses' %}" class="btn btn-primary btn-lg rounded-pill fw-bold px-5 shadow-sm pulse-zalo">
+                <i class="bi bi-search me-2"></i> Khám phá khóa học ngay
+            </a>
+        </div>
     </div>
     {% endif %}
 </div>
+
+<style>
+    /* Hiệu ứng mượt mà khi di chuột qua item */
+    .transition-hover-light {
+        transition: background-color 0.2s ease, padding-left 0.2s ease;
+    }
+
+        .transition-hover-light:hover {
+            background-color: rgba(13, 110, 253, 0.03);
+            padding-left: 10px;
+            border-radius: 10px;
+        }
+
+    /* CSS cho thẻ chọn phương thức thanh toán */
+    .cursor-pointer {
+        cursor: pointer;
+    }
+
+    .transition-all {
+        transition: all 0.3s ease;
+    }
+
+    .payment-method-card input[type="radio"]:checked + .card-body {
+        border-color: #0d6efd !important;
+        background-color: rgba(13, 110, 253, 0.05) !important;
+        box-shadow: 0 4px 10px rgba(13,110,253,0.15);
+    }
+
+    .payment-method-card .check-icon {
+        opacity: 0;
+        transform: scale(0.5);
+        transition: all 0.3s ease;
+    }
+
+    .payment-method-card input[type="radio"]:checked + .card-body .check-icon {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    /* Hiệu ứng đập nhịp tim cho nút Thanh Toán */
+    .pulse-btn {
+        animation: pulse-danger 2s infinite;
+    }
+
+    @keyframes pulse-danger {
+        0% {
+            box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7);
+        }
+
+        70% {
+            box-shadow: 0 0 0 10px rgba(220, 53, 69, 0);
+        }
+
+        100% {
+            box-shadow: 0 0 0 0 rgba(220, 53, 69, 0);
+        }
+    }
+
+    /* Đồng bộ Dark Mode */
+    [data-bs-theme="dark"] .bg-light {
+        background-color: #212529 !important;
+    }
+
+    [data-bs-theme="dark"] .payment-method-card .card-body {
+        background-color: #2b3035 !important;
+        border-color: #495057 !important;
+    }
+
+    [data-bs-theme="dark"] .payment-method-card input[type="radio"]:checked + .card-body {
+        border-color: #0d6efd !important;
+        background-color: #1a2a40 !important;
+    }
+</style>
 {% endblock %}
