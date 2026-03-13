@@ -192,6 +192,14 @@ JAZZMIN_SETTINGS = {
         "primary": "btn-primary rounded-pill",
         "secondary": "btn-secondary rounded-pill",
     },
+    "usermenu_links": [
+        {
+            "name": "Quay về Trang chủ", 
+            "url": "/", 
+            "new_window": False, # False là mở cùng tab, True là mở tab mới
+            "icon": "fas fa-home"
+        },
+    ],
 }
 
 # Cấu hình màu sắc mặc định (Tone tối sang trọng)

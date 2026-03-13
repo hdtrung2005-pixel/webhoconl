@@ -18,6 +18,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import update_session_auth_hash # Hàm xịn chống văng đăng xuất
 from django.db.models import Sum, Count
 from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib.auth.decorators import user_passes_test
 # --- 1. HÀM PHÂN QUYỀN (DECORATOR) ---
 def teacher_required(function):
     def wrap(request, *args, **kwargs):
@@ -68,9 +69,8 @@ def detail(request, course_id):
             course=course,
             order__status='Completed' 
         ).exists()
-        
-        if has_bought:
-            user_has_course = True
+        if has_bought or request.user.role == 'teacher' or request.user.is_superuser:
+             user_has_course = True
 
     # 2. LẤY DANH SÁCH ĐÁNH GIÁ (Dùng LessonReview)
     reviews = LessonReview.objects.filter(lesson__course=course).order_by('-created_at')
@@ -579,7 +579,7 @@ def switch_payment(request, order_id, method):
 # ==========================================
 # TRANG THỐNG KÊ DOANH THU (CHỈ DÀNH CHO ADMIN)
 # ==========================================
-@staff_member_required(login_url='login') # Chặn người lạ, chỉ Admin mới vào được
+@user_passes_test(lambda u: u.is_superuser, login_url='login') # Chặn người lạ, chỉ Admin mới vào được
 def revenue_stats(request):
     # 1. Tính TỔNG DOANH THU từ trước đến nay (Chỉ tính đơn đã Completed)
     total_revenue = Order.objects.filter(status='Completed').aggregate(Sum('total_price'))['total_price__sum'] or 0
