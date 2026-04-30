@@ -116,7 +116,7 @@
                         </a>
                     </li>
                     {% endif %}
-                    {% if request.user.is_staff %}
+                    {% if user.is_superuser %}
                     <li class="nav-item">
                         <a class="nav-link fw-bold text-warning" href="{% url 'revenue_stats' %}">
                             <i class="bi bi-bar-chart-fill me-1"></i>Thống kê Doanh thu
@@ -238,23 +238,24 @@
             s0.parentNode.insertBefore(s1, s0);
         })();
     </script>
-    <div class="zalo-chat-widget">
+    <div class="support-contact-btn">
         <a href="https://zalo.me/0916536176" target="_blank" rel="noopener noreferrer">
-            <div class="zalo-icon-wrap">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Icon_of_Zalo.svg/1200px-Icon_of_Zalo.svg.png" alt="Zalo Chat">
+            <div class="support-icon-circle">
+                <img src="https://cdn.haitrieu.com/wp-content/uploads/2022/01/Logo-Zalo-Arc.png" alt="Zalo">
             </div>
         </a>
     </div>
 
     <style>
-        .zalo-chat-widget {
+        /* CSS cho nút hỗ trợ */
+        .support-contact-btn {
             position: fixed;
             bottom: 25px;
             left: 25px;
             z-index: 9999;
         }
 
-        .zalo-icon-wrap {
+        .support-icon-circle {
             background-color: #0068ff;
             width: 60px;
             height: 60px;
@@ -263,21 +264,21 @@
             justify-content: center;
             align-items: center;
             box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-            animation: pulse-zalo 1.5s infinite;
+            animation: pulse-btn 1.5s infinite;
             transition: all 0.3s ease;
         }
 
-            .zalo-icon-wrap img {
+            .support-icon-circle img {
                 width: 40px;
                 height: 40px;
                 object-fit: contain;
             }
 
-            .zalo-icon-wrap:hover {
+            .support-icon-circle:hover {
                 transform: scale(1.1);
             }
 
-        @keyframes pulse-zalo {
+        @keyframes pulse-btn {
             0% {
                 box-shadow: 0 0 0 0 rgba(0, 104, 255, 0.7);
             }
@@ -319,6 +320,109 @@
                 updateIcon(newTheme);
             });
         });
+    </script>
+    <button id="chatbot-toggle" class="btn btn-primary rounded-circle shadow-lg" style="position: fixed; bottom: 120px; right: 30px; width: 65px; height: 65px; z-index: 1050; border: 3px solid white;">
+        <i class="bi bi-robot fs-2"></i>
+    </button>
+
+    <div id="chatbot-window" class="card shadow-lg border-0" style="display: none; position: fixed; bottom: 110px; right: 30px; width: 360px; z-index: 1050; border-radius: 15px; overflow: hidden;">
+        <div class="card-header bg-gradient bg-primary text-white d-flex justify-content-between align-items-center p-3">
+            <h6 class="mb-0 fw-bold"><i class="bi bi-headset me-2"></i>Tư vấn viên AI</h6>
+            <button type="button" class="btn-close btn-close-white" onclick="toggleChatbot()" aria-label="Close"></button>
+        </div>
+
+        <div class="card-body" id="chatbot-messages" style="height: 350px; overflow-y: auto; background-color: #f0f2f5;">
+            <div class="mb-3">
+                <span class="d-inline-block bg-white p-3 rounded-3 shadow-sm text-dark" style="max-width: 90%; font-size: 0.95rem;">
+                    <strong>🤖 Tư vấn viên:</strong> Chào bạn! Mình là AI hỗ trợ tuyển sinh. Bạn đang muốn học Web, Mobile App hay Thiết kế đồ họa ạ?
+                </span>
+            </div>
+        </div>
+
+        <div class="card-footer bg-white p-2">
+            <div class="input-group">
+                <input type="text" id="chatbot-input" class="form-control border-0 bg-light" placeholder="Nhập nhu cầu của bạn..." style="box-shadow: none;">
+                <button class="btn btn-primary rounded-3 px-3" onclick="sendChatbot()">
+                    <i class="bi bi-send-fill"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    // 1. Hàm Bật/Tắt cửa sổ Chat
+    function toggleChatbot() {
+        const window = document.getElementById('chatbot-window');
+        window.style.display = window.style.display === 'none' ? 'block' : 'none';
+    }
+
+    document.getElementById('chatbot-toggle').addEventListener('click', toggleChatbot);
+
+    // 2. Hàm Gửi tin nhắn
+    function sendChatbot() {
+        const inputField = document.getElementById('chatbot-input');
+        const chatBox = document.getElementById('chatbot-messages');
+        const question = inputField.value.trim();
+
+        if (!question) return;
+
+        // Hiện tin nhắn của khách
+        chatBox.innerHTML += `
+            <div class="mb-3 text-end">
+                <span class="d-inline-block bg-primary text-white p-2 rounded-3 shadow-sm" style="max-width: 85%; text-align: left; font-size: 0.95rem;">
+                    ${question}
+                </span>
+            </div>`;
+        inputField.value = '';
+
+        // Hiện chữ AI đang gõ
+        const loadingId = 'loading-bot-' + Date.now();
+        chatBox.innerHTML += `
+            <div id="${loadingId}" class="mb-3">
+                <span class="d-inline-block bg-light p-2 rounded-3 text-muted" style="font-size: 0.9rem;">
+                    <em>🤖 Đang suy nghĩ...</em>
+                </span>
+            </div>`;
+        chatBox.scrollTop = chatBox.scrollHeight;
+
+        // Gửi lên Server
+        fetch("{% url 'ai_consultant' %}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify({ question: question })
+        })
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById(loadingId).remove();
+            if (data.status === 'success') {
+                let answerHTML = data.answer.replace(/\n/g, '<br>');
+                chatBox.innerHTML += `
+                    <div class="mb-3">
+                        <span class="d-inline-block bg-white p-3 rounded-3 shadow-sm text-dark border border-primary border-opacity-25" style="max-width: 90%; font-size: 0.95rem;">
+                            <strong>🤖 Tư vấn viên:</strong><br> ${answerHTML}
+                        </span>
+                    </div>`;
+            } else {
+                chatBox.innerHTML += `<div class="text-danger mb-2 small">Lỗi kết nối AI.</div>`;
+            }
+            chatBox.scrollTop = chatBox.scrollHeight;
+        })
+        .catch(error => {
+            document.getElementById(loadingId).remove();
+            chatBox.innerHTML += `<div class="text-danger mb-2 small">Lỗi mạng.</div>`;
+        });
+    }
+
+    // Bấm Enter để gửi
+    document.getElementById("chatbot-input").addEventListener("keypress", function(event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            sendChatbot();
+        }
+    });
     </script>
 </body>
 </html>

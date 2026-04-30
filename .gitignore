@@ -205,3 +205,16 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+# Bỏ qua thư mục chứa file tĩnh sinh tự động
+staticfiles/
+# Chặn thư mục chứa ảnh upload của khóa học & user (Không đẩy lên Git cho nhẹ)
+media/
+
+# Quét sạch mọi loại biến thể của file môi trường cho an toàn tuyệt đối
+*.env
+.env.*
+
+# Bỏ qua cài đặt riêng của VS Code (Nên bỏ comment dòng này)
+.vscode/
+# Bỏ qua rác của Visual Studio
+.vs/

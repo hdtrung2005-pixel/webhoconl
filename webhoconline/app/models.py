@@ -60,12 +60,20 @@ class Course(models.Model):
 
     def __str__(self):
         return self.title
+    @property
+    def formatted_price(self):
+        # Đề phòng trường hợp khóa học miễn phí (giá = 0 hoặc rỗng)
+        if not self.price:
+            return "0"
+        # Ép định dạng 10000 -> "10.000"
+        return f"{int(self.price):,}".replace(",", ".")
 
 # 4. Bảng Order (Đã sửa lỗi lặp field)
 class Order(models.Model):
     # ĐỊNH NGHĨA CÁC TRẠNG THÁI
     STATUS_CHOICES = (
-        ('Pending', 'Đang xử lý'),   
+        ('Pending', 'Chờ thanh toán'),     # Mới tạo đơn, chưa trả tiền
+        ('Processing', 'Đang chờ duyệt'),  # Đã bấm xác nhận chuyển khoản
         ('Completed', 'Đã hoàn thành'),
         ('Canceled', 'Đã hủy'),
     )
@@ -77,7 +85,8 @@ class Order(models.Model):
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     total_price = models.DecimalField(max_digits=10, decimal_places=2)
-    
+
+   # is_hidden = models.BooleanField(default=False)
     # Chỉ khai báo status 1 lần duy nhất tại đây
     status = models.CharField(
         max_length=20, 
@@ -96,6 +105,7 @@ class Order(models.Model):
         verbose_name_plural = "Quản lý Đơn hàng"
    
 # 5. Chi tiết đơn hàng
+
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
