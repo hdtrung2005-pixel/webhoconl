@@ -466,6 +466,9 @@ def verify_otp(request):
         messages.error(request, 'Mã OTP sai hoặc đã hết hạn!')
     return render(request, 'app/verify_otp.html')
 
+
+
+
 def reset_password(request):
     email = request.session.get('reset_email')
     is_verified = request.session.get('otp_verified')
