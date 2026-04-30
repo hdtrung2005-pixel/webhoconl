@@ -20,6 +20,7 @@ class CustomUserCreationForm(UserCreationForm):
             'username': forms.TextInput(attrs={'class': 'form-control'}),
         }
 
+
 # 2. Form Chỉnh sửa hồ sơ
 class ProfileForm(forms.ModelForm):
     class Meta:
