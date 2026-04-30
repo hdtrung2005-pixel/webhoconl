@@ -21,6 +21,8 @@ GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY')
 
 # --- CẤU HÌNH HỆ THỐNG (ĐÂY LÀ NHỮNG DÒNG BÁC ĐANG THIẾU) ---
 
+
+
 INSTALLED_APPS = [
     'jazzmin', 
     'django.contrib.admin',
