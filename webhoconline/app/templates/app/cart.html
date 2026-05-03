@@ -39,7 +39,7 @@
                         </div>
 
                         <div class="col-md-3 col-12 text-md-end mt-3 mt-md-0 d-flex flex-md-column justify-content-between align-items-md-end">
-                            <h5 class="fw-bold text-danger mb-0">{{ item.course.price|floatformat:0|intcomma }}đ</h5>
+                            <h5 class="fw-bold text-danger mb-0">{{ item.course.formatted_price }}đ</h5>
                             <a href="{% url 'remove_from_cart' item.course.id %}" class="btn btn-sm btn-outline-danger rounded-pill mt-2" title="Xóa khỏi giỏ">
                                 <i class="bi bi-trash3-fill"></i> <span class="d-md-none ms-1">Xóa</span>
                             </a>
@@ -60,7 +60,7 @@
                 <div class="card-body p-4 bg-light rounded-bottom-4">
                     <div class="d-flex justify-content-between mb-3 text-muted">
                         <span>Tạm tính:</span>
-                        <span class="fw-bold">{{ total_price|floatformat:0|intcomma }}đ</span>
+                        <span class="fw-bold">{{ formatted_total }}đ</span>
                     </div>
                     <div class="d-flex justify-content-between mb-3 text-success">
                         <span>Giảm giá:</span>
@@ -69,7 +69,7 @@
                     <hr class="border-secondary opacity-25">
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <span class="fw-bold text-dark fs-5">Tổng cộng:</span>
-                        <span class="fw-bold text-danger fs-3">{{ total_price|floatformat:0|intcomma }}đ</span>
+                        <span class="fw-bold text-danger fs-3">{{ formatted_total }}đ</span>
                     </div>
 
                     <form method="POST" action="{% url 'checkout' %}">

@@ -159,9 +159,15 @@
                         <i class="bi bi-person-video3 me-1"></i> GV: {{ course.instructor.username|title|default:"Admin" }}
                     </p>
 
-                    <a href="{% url 'watch_lesson' course.id 1 %}" class="btn btn-success mt-auto fw-bold w-100 shadow-sm" style="border-radius: 10px;">
+                    {% if course.lessons.all %}
+                    <a href="{% url 'watch_lesson' course.id course.lessons.first.id %}" class="btn btn-success mt-auto fw-bold w-100 shadow-sm" style="border-radius: 10px;">
                         <i class="bi bi-play-circle-fill me-1"></i> Học tiếp ngay
                     </a>
+                    {% else %}
+                    <button class="btn btn-secondary mt-auto fw-bold w-100 shadow-sm" style="border-radius: 10px;" disabled>
+                        <i class="bi bi-hourglass-split me-1"></i> Đang cập nhật video
+                    </button>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -204,7 +210,7 @@
                     <div class="mt-auto d-flex justify-content-between align-items-center border-top pt-3">
                         <span class="text-danger fw-bold fs-5">
                             {% if course.price > 0 %}
-                            {{ course.price|intcomma }}đ
+                            {{ course.formatted_price }} đ
                             {% else %}
                             Miễn phí
                             {% endif %}
@@ -260,7 +266,7 @@
                     <div class="d-flex justify-content-between align-items-center mt-auto border-top pt-3">
                         <span class="text-danger fw-bold fs-5">
                             {% if c.price > 0 %}
-                            {{ c.price|floatformat:0|intcomma }}đ
+                            {{ c.formatted_price }}đ
                             {% else %}
                             Miễn phí
                             {% endif %}

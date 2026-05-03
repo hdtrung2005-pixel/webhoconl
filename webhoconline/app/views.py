@@ -160,8 +160,15 @@ def cart_detail(request):
         subtotal = course.price * quantity
         cart_items.append({'course': course, 'quantity': quantity, 'subtotal': subtotal})
         total_price += subtotal
-    return render(request, 'app/cart.html', {'cart_items': cart_items, 'total_price': total_price})
+        
+    formatted_total = f"{int(total_price):,}".replace(",", ".")
 
+
+    return render(request, 'app/cart.html', {
+        'cart_items': cart_items, 
+        'total_price': total_price,
+        'formatted_total': formatted_total 
+    })
 def remove_from_cart(request, course_id):
     cart = request.session.get('cart', {})
     cart.pop(str(course_id), None)
@@ -385,23 +392,29 @@ def bulk_delete_orders(request):
 
 @user_passes_test(lambda u: u.is_superuser, login_url='login')
 def revenue_stats(request):
-    total_revenue = Order.objects.filter(status='Completed').aggregate(Sum('total_price'))['total_price__sum'] or 0
+    total_rev_raw = Order.objects.filter(status='Completed').aggregate(Sum('total_price'))['total_price__sum'] or 0
     
-    course_stats = OrderItem.objects.filter(order__status='Completed')\
+    # Định dạng tổng doanh thu (Ví dụ: 2910000 -> "2.910.000")
+    total_revenue_formatted = f"{int(total_rev_raw):,}".replace(",", ".")
+    
+    course_stats_raw = OrderItem.objects.filter(order__status='Completed')\
         .values('course__title')\
         .annotate(total_earned=Sum('price'), total_sold=Count('id'))\
         .order_by('-total_earned')
 
-    labels = [item['course__title'] for item in course_stats]
-    data = [float(item['total_earned']) for item in course_stats]
+    # Định dạng lại giá cho từng khóa học trong danh sách
+    for item in course_stats_raw:
+        item['earned_formatted'] = f"{int(item['total_earned']):,}".replace(",", ".")
+
+    labels = [item['course__title'] for item in course_stats_raw]
+    data = [float(item['total_earned']) for item in course_stats_raw]
 
     return render(request, 'app/stats.html', {
-        'total_revenue': total_revenue,
-        'course_stats': course_stats,
+        'total_revenue': total_revenue_formatted, # Gửi số đã định dạng
+        'course_stats': course_stats_raw,
         'chart_labels': labels,
         'chart_data': data,
     })
-
 # --- TÍNH NĂNG AI TRỢ GIẢNG & TƯ VẤN ---
 @login_required
 def ask_ai_tutor(request):

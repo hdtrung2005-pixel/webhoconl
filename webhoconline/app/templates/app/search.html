@@ -23,7 +23,7 @@
                     <h5 class="card-title text-truncate">{{ course.title }}</h5>
                     <p class="card-text text-muted small flex-grow-1">{{ course.description|truncatewords:20 }}</p>
                     <div class="d-flex justify-content-between align-items-center mt-3">
-                        <span class="text-danger fw-bold fs-5">{{ course.price|intcomma }}đ</span>
+                        <span class="text-danger fw-bold fs-5">{{ course.formatted_price }}đ</span>
                         <a href="{% url 'detail' course.id %}" class="btn btn-outline-primary btn-sm">Xem chi tiết</a>
                     </div>
                 </div>
