@@ -402,6 +402,7 @@ def revenue_stats(request):
         .annotate(total_earned=Sum('price'), total_sold=Count('id'))\
         .order_by('-total_earned')
 
+
     # Định dạng lại giá cho từng khóa học trong danh sách
     for item in course_stats_raw:
         item['earned_formatted'] = f"{int(item['total_earned']):,}".replace(",", ".")
