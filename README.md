@@ -4,117 +4,102 @@
 
 📝 Giới thiệu dự án
 >>Dự án là nền tảng giáo dục trực tuyến toàn diện, giúp học viên tiếp cận tri thức lập trình thông qua lộ trình bài bản. Hệ thống không chỉ dừng lại ở việc xem video mà còn tương tác trực tiếp với AI Tutor để giải đáp thắc mắc ngay trong bài học.
+## 📌 Mục lục
 
+* [Tính năng nổi bật](#tính-năng-nổi-bật)
+* [Yêu cầu & Cài đặt](#yêu-cầu--cài-đặt)
+* [Cách sử dụng](#cách-sử-dụng)
+* [Công nghệ sử dụng](#công-nghệ-sử-dụng)
 ---
 
 ✨ Tính năng nổi bật
-1. Trí tuệ nhân tạo (AI Integration) 🤖
+
+
+### 1. Dành cho Học viên (Student)
+* **Trợ giảng AI (Gemini AI):** Giải đáp thắc mắc bài học và tư vấn lộ trình học tập ngay trên website.
+* **Hệ thống lộ trình (Roadmap):** Đăng ký mua khóa học theo các combo lộ trình định sẵn để nhận ưu đãi.
+* **Thanh toán VietQR:** Tự động tạo mã QR thanh toán kèm nội dung chuyển khoản chính xác cho từng đơn hàng.
+* **Học tập trực quan:** Xem video bài giảng (YouTube Embed), theo dõi danh sách bài học và đánh giá khóa học.
+* **Bảo mật hồ sơ:** Chặn ký tự số và đặc biệt trong tên người dùng, giao diện cập nhật hồ sơ thân thiện.
+
+### 2. Dành cho Giảng viên (Teacher)
+* **Đặc quyền truy cập:** Xem và kiểm tra toàn bộ nội dung khóa học, video bài giảng mà không cần qua bước thanh toán.
+* **Phân quyền bảo mật:** Hệ thống bảo vệ các trang nghiệp vụ riêng biệt bằng Decorator `@teacher_required`, ngăn chặn học viên truy cập trái phép.
+
+### 3. Dành cho Quản trị viên (Admin)
+* **Quản trị hiện đại:** Sử dụng giao diện **Jazzmin** chuyên nghiệp, trực quan.
+* **Thống kê thông minh:** Biểu đồ doanh thu và báo cáo số lượng học viên theo từng khóa học.
+* **Quản lý nội dung:** CRUD (Thêm/Sửa/Xóa) Khóa học, bài giảng (Inline Admin), lộ trình và duyệt/hủy đơn hàng.
+🛠 Công nghệ sử dụng
+Framework: Django 5.2.10.
+### 4. Trí tuệ nhân tạo (AI Integration) 🤖
 AI Tutor: Giải đáp thắc mắc về nội dung bài giảng ngay tại trang xem video sử dụng Gemini 2.5 Flash.
 
 AI Consultant: Tư vấn lộ trình và khóa học phù hợp dựa trên nhu cầu học viên.
 
-2. Nghiệp vụ học tập & Thanh toán
-Học tập: Trình phát Video Youtube Embed tối ưu, danh sách bài học trực quan, hệ thống đánh giá (Review).
+---
 
-Lộ trình (Roadmap): Đăng ký mua khóa học theo gói combo lộ trình để nhận ưu đãi giảm giá.
+## 🛠 Yêu cầu & Cài đặt
 
-Thanh toán thông minh: Tích hợp VietQR tự động tạo mã QR kèm nội dung chuyển khoản chính xác.
+### Yêu cầu hệ thống
+* **Python** >= 3.11.9
+* **Django** >= 5.2.10
+* **SQL Server** (MSSQL)
+* **Môi trường:** VS Code (khuyến nghị)
 
-Quản lý đơn hàng: Cho phép người dùng theo dõi lịch sử mua hàng và hủy đơn khi đang ở trạng thái chờ duyệt.
-
-3. Bảo mật & Quản trị
-Validation: Chặn số và ký tự đặc biệt trong tên người dùng tại trang Hồ sơ cá nhân.
-
-Giao diện Jazzmin: Hệ thống quản trị Admin được tùy chỉnh chuyên nghiệp, hiện đại với đầy đủ các Dashboard thống kê.
-
-🛠 Công nghệ sử dụng
-Framework: Django 5.2.10.
-
-Cơ sở dữ liệu: Microsoft SQL Server (MSSQL).
-
-Frontend: HTML5, CSS3, Bootstrap 5, JavaScript.
-
-Thư viện hỗ trợ: django-jazzmin, pillow, python-dotenv, google-generativeai.
+---
 
 🚀 Hướng dẫn cài đặt & Chạy dự án
-Bước 1: Chuẩn bị môi trường
+1. **Clone repository**
+   ```bash
+   git clone [https://github.com/trung123/webhoconline.git](https://github.com/trung123/webhoconline.git)
+   cd webhoconline
+2. **Tạo và kích hoạt môi trường ảo**
+   ```bash
+   python -m venv venv
+   venv\Scripts\activate  # Windows
+3. **Cài đặt thư viện cần thiết**
+    ```bash
+pip install django pillow python-dotenv google-generativeai django-jazzmin mssql-django
 
-```Bash
-# Tạo và kích hoạt môi trường ảo
-python -m venv venv
-venv\Scripts\activate  # Windows
-```
-Bước 2: Cài đặt thư viện
+4. **Cấu hình biến môi trường (.env)**
+   ```bash
+   GEMINI_API_KEY=your_api_key_here
+   SECRET_KEY=your_django_secret_key
+   BANK_CODE=MB
+   BANK_ACCOUNT_NUMBER=0916536176
+   BANK_ACCOUNT_NAME=HA DUC TRUNG
 
-```Bash
-pip install -r requirements.txt
-```
-Bước 3: Cấu hình biến môi trường (.env)
-Tạo file .env tại thư mục gốc và khai báo (Dựa theo cấu hình trong settings.py):
-```
-GEMINI_API_KEY: API Key trợ giảng.
+5. **Cấu hình Cơ sở dữ liệu (SQL Server)**
+   ```bash
+   Đảm bảo SQL Server đang chạy và database WebHocTap_Moi đã được tạo trên host
+6. **Chạy Migrate và thu thập Static**
+   ```bash
+   python manage.py collectstatic
+   python manage.py migrate
+---
 
-SECRET_KEY: Khóa bí mật của dự án.
+🚀 Cách sử dụng
+**Chạy server Django tại cổng 8888 (theo cấu hình dự án):**
+  
+    python manage.py runserver 8888
+**Truy cập website tại:**
+ 
+    http://127.0.0.1:8888/
+    
+**Trang quản trị Admin:** 
 
-EMAIL_HOST_USER / PASSWORD: Cấu hình gửi mã OTP.
+    http://127.0.0.1:8888/admin/
+---
+💻 Công nghệ sử dụng
+Backend Framework: Django 5.2.10
 
-BANK_CODE, BANK_ACCOUNT_NUMBER: Thông tin nhận thanh toán VietQR.
-```
-Bước 4: Cấu hình Cơ sở dữ liệu
-Đảm bảo SQL Server đang chạy và thông tin kết nối trong settings.py đã chính xác:
-```
-Engine: mssql
+Ngôn ngữ: Python 3.11.9
 
-Host: DESKTOP-CU99I1G\SQLEXPRESS
+Cơ sở dữ liệu: Microsoft SQL Server (MSSQL)
 
-Database: WebHocTap_Moi
-```
-Bước 5: Khởi tạo và chạy Server
+Frontend: Bootstrap 5, HTML5, CSS3, JavaScript
 
-```Bash
-python manage.py collectstatic  # Gom file tĩnh vào thư mục staticfiles
-python manage.py migrate
-python manage.py runserver 8888  # Chạy tại cổng 8888
-```
-##Hình ảnh Demo
-1.Đăng ký
-<img width="716" height="898" alt="image" src="https://github.com/user-attachments/assets/f24933cb-fcab-4283-a740-981efdfa8911" />
+AI Integration: Google Gemini AI API
 
-2. Đăng nhập 
-<img width="1721" height="868" alt="image" src="https://github.com/user-attachments/assets/bd156f6d-3c43-49bd-b5b5-2a886df18ac3" />
-
-3.Trang chủ
-<img width="1903" height="915" alt="image" src="https://github.com/user-attachments/assets/54f39f62-cfc9-4465-808c-46a881d3dab9" />
-
-4.Môn học
-<img width="1905" height="915" alt="image" src="https://github.com/user-attachments/assets/db0f1e0c-8a1c-47b8-993c-5ddc2fbca89f" />
-
-5.Danh mục, tất cả khóa học
-<img width="1902" height="920" alt="image" src="https://github.com/user-attachments/assets/7ff39f05-585d-40ba-8e91-4ee6f526a094" />
-
-6.lộ trình
- <img width="1894" height="909" alt="image" src="https://github.com/user-attachments/assets/f74f8ae5-73ce-4da7-bbb3-74a49f476c62" />
-
-7.tìm kiếm
-<img width="1919" height="911" alt="image" src="https://github.com/user-attachments/assets/a652c751-7245-43e7-bdc8-a073ae280830" />
-
-8.giỏ hàng
-<img width="1899" height="901" alt="image" src="https://github.com/user-attachments/assets/e424970d-d648-40b6-96c3-544dfcb4fda4" />
-
-9.hồ sơ cá nhân
-<img width="1919" height="916" alt="image" src="https://github.com/user-attachments/assets/39c67a46-552e-4d9f-866d-964da6f75101" />
-
-10.lịch sử mua hàng
-<img width="1919" height="911" alt="image" src="https://github.com/user-attachments/assets/4b905ae4-254f-4f1e-a1e3-00ceadd8887f" />
-
-11.chi tiết lộ trình
-<img width="1900" height="908" alt="image" src="https://github.com/user-attachments/assets/d3eb9b7c-49a7-4d33-84cd-dfff73a9234c" />
-
-
-
-
-
-
-
-
-
+Giao diện quản trị: Jazzmin
