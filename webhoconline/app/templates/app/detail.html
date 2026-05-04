@@ -21,11 +21,11 @@
                 </span>
             </p>
 
-            <h3 class="text-danger fw-bold mb-4">
-                {% if course.price > 0 %}
-                {{ course.price|intcomma }}đ
-                {% else %}
+            <h3 class="text-danger fw-bold mb-3">
+                {% if course.price == 0 %}
                 Miễn phí
+                {% else %}
+                {{ price_formatted }}đ
                 {% endif %}
             </h3>
 

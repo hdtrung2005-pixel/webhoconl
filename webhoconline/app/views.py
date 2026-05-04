@@ -67,9 +67,15 @@ def detail(request, course_id):
     review_count = reviews.count()
     average_rating = sum(r.rating for r in reviews) / review_count if review_count > 0 else 0
 
+    price_formatted = f"{int(course.price):,}".replace(",", ".")
+    
     return render(request, 'app/detail.html', {
-        'course': course, 'user_has_course': user_has_course,
-        'reviews': reviews, 'average_rating': round(average_rating, 1), 'review_count': review_count
+        'course': course, 
+        'user_has_course': user_has_course,
+        'reviews': reviews, 
+        'average_rating': round(average_rating, 1), 
+        'review_count': review_count,
+        'price_formatted': price_formatted  # THÊM DÒNG NÀY VÀO LÀ ĂN TIỀN
     })
 
 def search(request):
