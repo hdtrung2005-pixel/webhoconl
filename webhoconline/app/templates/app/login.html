@@ -11,6 +11,14 @@
             </div>
             <div class="card-body p-4">
                 <form method="post">
+                    {% if form.errors %}
+                    <div class="alert alert-danger d-flex align-items-center p-2 mb-3 shadow-sm" role="alert" style="border-radius: 8px; border-left: 4px solid #dc3545;">
+                        <i class="bi bi-exclamation-triangle-fill fs-5 me-2 text-danger"></i>
+                        <div class="small fw-semibold text-danger">
+                            Tên đăng nhập hoặc mật khẩu không chính xác!
+                        </div>
+                    </div>
+                    {% endif %}
                     {% csrf_token %}
                     <div class="mb-3">
                         <label class="form-label fw-bold">Tên đăng nhập</label>
