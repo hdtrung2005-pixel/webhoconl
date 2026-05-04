@@ -101,14 +101,30 @@ def all_courses(request):
 # --- XÁC THỰC TÀI KHOẢN (AUTH) ---
 def register(request):
     if request.method == 'POST':
+        # 1. Khai báo form với dữ liệu người dùng gửi lên
         form = CustomUserCreationForm(request.POST)
+        
+        # 2. Lấy email từ dữ liệu form để kiểm tra
+        email = request.POST.get('email')
+
+        # 3. Kiểm tra email trùng
+        if User.objects.filter(email=email).exists():
+            messages.error(request, 'Email này đã được đăng ký. Vui lòng sử dụng email khác!')
+            return redirect('register') 
+        
+        # 4. Nếu email chưa ai dùng, tiếp tục kiểm tra form có hợp lệ không
         if form.is_valid():
-            login(request, form.save())
+            user = form.save()
+            login(request, user) # Đăng nhập luôn sau khi tạo tài khoản
             messages.success(request, "Đăng ký thành công!")
             return redirect('home')
-        messages.error(request, "Đăng ký thất bại. Vui lòng kiểm tra thông tin.")
+        else:
+            # Nếu form không hợp lệ (ví dụ: mật khẩu quá ngắn, không khớp...)
+            messages.error(request, "Đăng ký thất bại. Vui lòng kiểm tra lại thông tin.")
     else:
+        # Nếu là phương thức GET (vào trang đăng ký)
         form = CustomUserCreationForm()
+        
     return render(request, 'app/register.html', {'form': form})
 
 @login_required(login_url='login')

@@ -10,6 +10,16 @@
                 <h4 class="mb-0 fw-bold">ĐĂNG KÝ TÀI KHOẢN</h4>
             </div>
             <div class="card-body p-4">
+                {% if messages %}
+                <div class="mt-3 mb-3">
+                    {% for message in messages %}
+                    <div class="alert {% if message.tags == 'error' %}alert-danger{% else %}alert-success{% endif %} alert-dismissible fade show shadow-sm" role="alert">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i> <strong>{{ message }}</strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
                 <form method="post">
                     {% csrf_token %}
                     {% for field in form %}
@@ -48,4 +58,34 @@
         margin: 0;
     }
 </style>
+<!-- SCRIPT XỬ LÝ THÔNG BÁO TỰ TẮT VÀ CLICK TẮT -->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // 1. Xử lý sự kiện khi user tự click vào nút X
+        let closeButtons = document.querySelectorAll('.btn-close');
+        closeButtons.forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                let alertBox = this.closest('.alert');
+                if (alertBox) {
+                    alertBox.remove(); // Xóa thông báo ngay lập tức
+                }
+            });
+        });
+
+        // 2. Tự động tắt thông báo sau 4 giây (4000 ms)
+        setTimeout(function() {
+            let alerts = document.querySelectorAll('.alert');
+            alerts.forEach(function(alertBox) {
+                // Thêm hiệu ứng mờ dần cho mượt
+                alertBox.style.transition = "opacity 0.5s ease";
+                alertBox.style.opacity = "0";
+
+                // Đợi mờ hẳn rồi xóa khỏi giao diện
+                setTimeout(function() {
+                    alertBox.remove();
+                }, 500);
+            });
+        }, 4000); // Bác có thể đổi 4000 thành thời gian tùy thích
+    });
+</script>
 {% endblock %}
