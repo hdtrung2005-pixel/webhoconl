@@ -2,24 +2,23 @@
 from pathlib import Path
 from dotenv import load_dotenv
 
-# 1. Tải file .env (Bác đảm bảo file .env nằm cùng cấp với manage.py nhé)
+# 1. Tải file .env 
 load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# [SỬA LỖI 1]
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-mac-dinh-neu-env-loi')
 
-# [SỬA LỖI 2]
+
 DEBUG = os.environ.get('DJANGO_DEBUG', 'False') == 'True'
 
-# [SỬA LỖI 3]
+
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '*').split(',')
 
-# [SỬA LỖI 6]
+
 GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY')
 
-# --- CẤU HÌNH HỆ THỐNG (ĐÂY LÀ NHỮNG DÒNG BÁC ĐANG THIẾU) ---
+# --- CẤU HÌNH HỆ THỐNG  ---
 
 
 
@@ -45,7 +44,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-# !!! DÒNG QUAN TRỌNG NHẤT ĐỂ FIX LỖI ATTRIBUTEERROR !!!
+# !!! FIX LỖI ATTRIBUTEERROR !!!
 ROOT_URLCONF = 'webhoconline.urls' 
 
 TEMPLATES = [
@@ -89,7 +88,7 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',},
 ]
 
-# [SỬA LỖI 4] Múi giờ Việt Nam
+# Múi giờ Việt Nam
 LANGUAGE_CODE = 'vi'
 TIME_ZONE = 'Asia/Ho_Chi_Minh'
 USE_I18N = True
@@ -110,7 +109,7 @@ LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'home'
 LOGIN_URL = 'login'
 
-# [SỬA LỖI 5] Email OTP (Đọc từ .env)
+#Email OTP (Đọc từ .env)
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
@@ -118,7 +117,7 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD') 
 
-# [SỬA LỖI 5] VietQR (Đọc từ .env)
+# VietQR (Đọc từ .env)
 BANK_CODE = os.environ.get('BANK_CODE')
 BANK_ACCOUNT_NUMBER = os.environ.get('BANK_ACCOUNT_NUMBER')
 BANK_ACCOUNT_NAME = os.environ.get('BANK_ACCOUNT_NAME')

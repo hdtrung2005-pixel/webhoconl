@@ -68,7 +68,7 @@ class Course(models.Model):
         # Ép định dạng 10000 -> "10.000"
         return f"{int(self.price):,}".replace(",", ".")
 
-# 4. Bảng Order (Đã sửa lỗi lặp field)
+# 4. Bảng Order 
 class Order(models.Model):
     # ĐỊNH NGHĨA CÁC TRẠNG THÁI
     STATUS_CHOICES = (
@@ -146,12 +146,10 @@ class Roadmap(models.Model):
         verbose_name = "Lộ trình"
         verbose_name_plural = "Quản lý Lộ trình"
 
-# 8. Bài học (QUAN TRỌNG: Đã sửa hàm get_embed_url)
+# 8. Bài học 
 class Lesson(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='lessons')
     title = models.CharField(max_length=200, verbose_name="Tiêu đề bài học")
-    
-    # Vẫn giữ nguyên trường cũ là video_id để không phải sửa Database
     video_id = models.CharField(max_length=100, verbose_name="Youtube Video Link/ID") 
     
     duration = models.FloatField(default=0.0, verbose_name="Thời lượng (phút)")
@@ -161,7 +159,7 @@ class Lesson(models.Model):
     def __str__(self):
         return f"{self.order}. {self.title}"
 
-    # 👇 Hàm này đã được sửa để lấy dữ liệu từ video_id
+    # 👇 Hàm này để lấy dữ liệu từ video_id
     @property
     def get_embed_url(self):
         # Lấy nội dung từ trường video_id (dù bạn paste link hay ID vào đây cũng được)

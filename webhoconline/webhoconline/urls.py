@@ -17,7 +17,6 @@ urlpatterns = [
     path('', include('app.urls')),
 ]
 
-# ĐOẠN NÀY LÀ CHÌA KHÓA ĐỂ HIỆN ẢNH NÈ BÁC
 if settings.DEBUG:
     # 1. Load ảnh user tải lên (Media)
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
