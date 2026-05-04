@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 ﻿﻿🎓 Web Học Lập Trình (Django E-Learning Platform)
+=======
+﻿🎓 Web Học Lập Trình (Django E-Learning Platform)
+>>>>>>> 4b9e4248873d6857277b23e260520037ec53c006
  
 >> Hệ thống E-Learning hiện đại được xây dựng bằng Django 5, tích hợp trí tuệ nhân tạo (AI) trợ giảng và hệ thống thanh toán thông minh.
 
