@@ -74,8 +74,8 @@ class CourseAdmin(admin.ModelAdmin):
     # CHIÊU CHIA KHỐI GIAO DIỆN FORM BÊN TRONG
     fieldsets = (
         ('📝 Thông tin chung', {
-            'fields': ('title', 'category', 'description'),
-            'classes': ('wide',) # Kéo rộng form
+            'fields': ('title', 'category', 'instructor', 'description'), 
+            'classes': ('wide',)
         }),
         ('💰 Chi phí & Hình ảnh', {
             'fields': ('price', 'image'),
