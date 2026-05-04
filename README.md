@@ -12,7 +12,7 @@
 * [Công nghệ sử dụng](#công-nghệ-sử-dụng)
 ---
 
-✨ Tính năng nổi bật
+Tính năng nổi bật
 
 
 ### 1. Dành cho Học viên (Student)
@@ -49,7 +49,7 @@ AI Consultant: Tư vấn lộ trình và khóa học phù hợp dựa trên nhu 
 
 ---
 
-🚀 Hướng dẫn cài đặt & Chạy dự án
+Hướng dẫn cài đặt & Chạy dự án
 1. **Clone repository**
    ```bash
    git clone [https://github.com/trung123/webhoconline.git](https://github.com/trung123/webhoconline.git)
@@ -79,7 +79,7 @@ pip install django pillow python-dotenv google-generativeai django-jazzmin mssql
    python manage.py migrate
 ---
 
-🚀 Cách sử dụng
+Cách sử dụng
 **Chạy server Django tại cổng 8888 (theo cấu hình dự án):**
   
     python manage.py runserver 8888
@@ -91,7 +91,7 @@ pip install django pillow python-dotenv google-generativeai django-jazzmin mssql
 
     http://127.0.0.1:8888/admin/
 ---
-💻 Công nghệ sử dụng
+Công nghệ sử dụng
 Backend Framework: Django 5.2.10
 
 Ngôn ngữ: Python 3.11.9
