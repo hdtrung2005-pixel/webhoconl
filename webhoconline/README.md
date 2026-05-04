@@ -1,118 +1,107 @@
-﻿**#  Web Học Lập Trình (Django E-Learning Platform)
+﻿﻿🎓 Web Học Lập Trình (Django E-Learning Platform)
+ 
+>> Hệ thống E-Learning hiện đại được xây dựng bằng Django 5, tích hợp trí tuệ nhân tạo (AI) trợ giảng và hệ thống thanh toán thông minh.
 
-> Hệ thống website học trực tuyến (E-Learning) được xây dựng bằng **Django Framework**, cho phép người dùng mua khóa học, xem lộ trình và học qua video bài giảng.
+📝 Giới thiệu dự án
+>>Dự án là nền tảng giáo dục trực tuyến toàn diện, giúp học viên tiếp cận tri thức lập trình thông qua lộ trình bài bản. Hệ thống không chỉ dừng lại ở việc xem video mà còn tương tác trực tiếp với AI Tutor để giải đáp thắc mắc ngay trong bài học.
+##  Mục lục
 
-##  Giới thiệu
-
-Dự án này là một nền tảng giáo dục trực tuyến, nơi Học viên có thể tìm kiếm các khóa học lập trình, đặt mua và vào học trực tiếp. Hệ thống tích hợp trình phát Video (Youtube Embed), quản lý đơn hàng và lộ trình học tập bài bản.
-
-Đây là đồ án thực hành nhằm áp dụng kiến thức về **Django, Bootstrap 5 và Cơ sở dữ liệu**.
-
+* [Tính năng nổi bật](#tính-năng-nổi-bật)
+* [Yêu cầu & Cài đặt](#yêu-cầu--cài-đặt)
+* [Cách sử dụng](#cách-sử-dụng)
+* [Công nghệ sử dụng](#công-nghệ-sử-dụng)
 ---
 
 ## Tính năng nổi bật
 
-### 1.  Dành cho Học viên (User)
-* **Hệ thống tài khoản:** Đăng ký, Đăng nhập, Quản lý hồ sơ cá nhân (Profile).
-* **Khóa học (Courses):**
-    * Tìm kiếm khóa học theo tên.
-    * Xem chi tiết khóa học, giá tiền và nội dung.
-* **Học tập (Learning):**
-    * **Xem Video bài giảng:** Tích hợp trình phát video Youtube ngay trên web (Bảo mật link, không cần tải video nặng).
-    * Danh sách bài học hiển thị rõ ràng bên cạnh video.
-* **Lộ trình (Roadmaps):** Xem các lộ trình gợi ý (VD: Backend Python, Frontend Basic...).
-* **Mua sắm & Thanh toán:**
-    * Thêm khóa học vào giỏ hàng.
-    * Thanh toán (COD / Chuyển khoản).
-    * **Quản lý đơn hàng:** Xem trạng thái đơn, **Hủy đơn hàng** (khi trạng thái đang chờ xử lý).
 
-### 2.  Dành cho Quản trị viên (Admin)
-* **Quản lý Khóa học:** Thêm/Sửa/Xóa khóa học.
-* **Quản lý Bài giảng (Inline Admin):** Thêm video bài học (Youtube ID) ngay trong giao diện sửa Khóa học.
-* **Quản lý Đơn hàng:** Duyệt đơn hàng thành công hoặc Hủy đơn.
-* **Quản lý Lộ trình:** Tạo lộ trình và gán khóa học vào lộ trình.
-* **Thống kê:** Quản lý người dùng, giảng viên.
+### 1. Dành cho Học viên (Student)
+* **Trợ giảng AI (Gemini AI):** Giải đáp thắc mắc bài học và tư vấn lộ trình học tập ngay trên website.
+* **Hệ thống lộ trình (Roadmap):** Đăng ký mua khóa học theo các combo lộ trình định sẵn để nhận ưu đãi.
+* **Thanh toán VietQR:** Tự động tạo mã QR thanh toán kèm nội dung chuyển khoản chính xác cho từng đơn hàng.
+* **Học tập trực quan:** Xem video bài giảng (YouTube Embed), theo dõi danh sách bài học và đánh giá khóa học.
+* **Bảo mật hồ sơ:** Chặn ký tự số và đặc biệt trong tên người dùng, giao diện cập nhật hồ sơ thân thiện.
+
+### 2. Dành cho Giảng viên (Teacher)
+* **Đặc quyền truy cập:** Xem và kiểm tra toàn bộ nội dung khóa học, video bài giảng mà không cần qua bước thanh toán.
+* **Phân quyền bảo mật:** Hệ thống bảo vệ các trang nghiệp vụ riêng biệt bằng Decorator `@teacher_required`, ngăn chặn học viên truy cập trái phép.
+
+### 3. Dành cho Quản trị viên (Admin)
+* **Quản trị hiện đại:** Sử dụng giao diện **Jazzmin** chuyên nghiệp, trực quan.
+* **Thống kê thông minh:** Biểu đồ doanh thu và báo cáo số lượng học viên theo từng khóa học.
+* **Quản lý nội dung:** CRUD (Thêm/Sửa/Xóa) Khóa học, bài giảng (Inline Admin), lộ trình và duyệt/hủy đơn hàng.
+🛠 Công nghệ sử dụng
+Framework: Django 5.2.10.
+### 4. Trí tuệ nhân tạo (AI Integration) 🤖
+AI Tutor: Giải đáp thắc mắc về nội dung bài giảng ngay tại trang xem video sử dụng Gemini 2.5 Flash.
+
+AI Consultant: Tư vấn lộ trình và khóa học phù hợp dựa trên nhu cầu học viên.
 
 ---
 
+## Yêu cầu & Cài đặt
+
+### Yêu cầu hệ thống
+* **Python** >= 3.11.9
+* **Django** >= 5.2.10
+* **SQL Server** (MSSQL)
+* **Môi trường:** VS Code (khuyến nghị)
+
+---
+
+Hướng dẫn cài đặt & Chạy dự án
+1. **Clone repository**
+   ```bash
+   git clone [https://github.com/trung123/webhoconline.git](https://github.com/trung123/webhoconline.git)
+   cd webhoconline
+2. **Tạo và kích hoạt môi trường ảo**
+   ```bash
+   python -m venv venv
+   venv\Scripts\activate  # Windows
+3. **Cài đặt thư viện cần thiết**
+    ```bash
+pip install django pillow python-dotenv google-generativeai django-jazzmin mssql-django
+
+4. **Cấu hình biến môi trường (.env)**
+   ```bash
+   GEMINI_API_KEY=your_api_key_here
+   SECRET_KEY=your_django_secret_key
+   BANK_CODE=MB
+   BANK_ACCOUNT_NUMBER=0916536176
+   BANK_ACCOUNT_NAME=HA DUC TRUNG
+
+5. **Cấu hình Cơ sở dữ liệu (SQL Server)**
+   ```bash
+   Đảm bảo SQL Server đang chạy và database WebHocTap_Moi đã được tạo trên host
+6. **Chạy Migrate và thu thập Static**
+   ```bash
+   python manage.py collectstatic
+   python manage.py migrate
+---
+
+## Cách sử dụng
+**Chạy server Django tại cổng 8888 (theo cấu hình dự án):**
+  
+    python manage.py runserver 8888
+**Truy cập website tại:**
+ 
+    http://127.0.0.1:8888/
+    
+**Trang quản trị Admin:** 
+
+    http://127.0.0.1:8888/admin/
+---
 ## Công nghệ sử dụng
+Backend Framework: Django 5.2.10
 
-* **Backend:** Python 3.x, Django 5.x.
-* **Frontend:** HTML5, CSS3, **Bootstrap 5** (Responsive), Bootstrap Icons.
-* **Font:** Google Fonts (Dancing Script cho Footer & Roboto).
-* **Database:** SQLite (Mặc định).
+Ngôn ngữ: Python 3.11.9
 
+Cơ sở dữ liệu: Microsoft SQL Server (MSSQL)
+
+Frontend: Bootstrap 5, HTML5, CSS3, JavaScript
+
+AI Integration: Google Gemini AI API
+
+Giao diện quản trị: Jazzmin
 ---
-
-## Cài đặt và Chạy dự án
-
-Để chạy dự án này trên máy tính cá nhân, hãy làm theo các bước sau:
-
-### Bước 1: Clone dự án
-```bash
-git clone [https://github.com/TEN-CUA-BAN/TEN-REPO.git](https://github.com/TEN-CUA-BAN/TEN-REPO.git)
-cd TEN-REPO**
-```
-Bước 2: Tạo môi trường ảo (Khuyên dùng)
-```Bash
-
-python -m venv venv
-# Windows:
-venv\Scripts\activate
-# MacOS/Linux:
-source venv/bin/activate
-```
-Bước 3: Cài đặt thư viện
-```Bash
-
-pip install django pillow
-```
-Bước 4: Khởi tạo Database
-```Bash
-
-python manage.py makemigrations
-python manage.py migrate
-```
-Bước 5: Tạo tài khoản Admin
-```Bash
-
-python manage.py createsuperuser
-# Nhập username, email và password...
-```
-Bước 6: Chạy Server
-```Bash
-
-python manage.py runserver
-```
-##Hình ảnh Demo
-1.Đăng ký
-<img width="1919" height="958" alt="image" src="https://github.com/user-attachments/assets/748f7b06-ba76-444d-8397-d0b59ebf2ff4" />
-2. Đăng nhập 
-<img width="1919" height="963" alt="image" src="https://github.com/user-attachments/assets/e2fd6435-c9a9-412f-ba5e-67e241289ece" />
-3.Trang chủ
-<img width="1899" height="917" alt="image" src="https://github.com/user-attachments/assets/ff4dba1a-cc6d-44da-8b83-89b6b2df317c" />
-Môn học
-<img width="1919" height="911" alt="image" src="https://github.com/user-attachments/assets/79d9ab55-8720-42f0-a15c-53d0aa21996d" />
-Danh mục, tất cả khóa học
-<img width="1919" height="900" alt="image" src="https://github.com/user-attachments/assets/635e3747-7dde-44aa-9a42-a44b869cb194" />
-lộ trình
-<img width="1909" height="880" alt="image" src="https://github.com/user-attachments/assets/9b363092-a024-4bbe-8ef0-02a99d855f5a" />
-tìm kiếm
-<img width="1919" height="902" alt="image" src="https://github.com/user-attachments/assets/7b4e8f18-32b3-45c7-ac15-8d5d09926bcb" />
-giỏ hàng
-<img width="1917" height="921" alt="image" src="https://github.com/user-attachments/assets/5122605f-dd85-4027-942a-d1986d9e1233" />
-hồ sơ cá nhân
-<img width="1918" height="908" alt="image" src="https://github.com/user-attachments/assets/1a401f1c-3273-40e1-ad25-7072732345a7" />
-lịch sử mua hàng
-<img width="1919" height="889" alt="image" src="https://github.com/user-attachments/assets/2d686820-36de-492f-8a11-20ab6ede2e78" />
-đăng xuất, xem hồ sơ
-<img width="678" height="899" alt="image" src="https://github.com/user-attachments/assets/70d5e6d4-49c7-4709-b7d6-69d66a172dca" />
-
-
-
-
-
-
-
-
-
+Dự án phục vụ mục đích học tập và thực hành môn Phát triển ứng dụng Python.
