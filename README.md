@@ -2,87 +2,79 @@
 
 > Hệ thống website học trực tuyến (E-Learning) được xây dựng bằng **Django Framework**, cho phép người dùng mua khóa học, xem lộ trình và học qua video bài giảng.
 
-##  Giới thiệu
-
-Dự án này là một nền tảng giáo dục trực tuyến, nơi Học viên có thể tìm kiếm các khóa học lập trình, đặt mua và vào học trực tiếp. Hệ thống tích hợp trình phát Video (Youtube Embed), quản lý đơn hàng và lộ trình học tập bài bản.
-
-Đây là đồ án thực hành nhằm áp dụng kiến thức về **Django, Bootstrap 5 và Cơ sở dữ liệu**.
+📝 Giới thiệu dự án
+Dự án là nền tảng giáo dục trực tuyến toàn diện, giúp học viên tiếp cận tri thức lập trình thông qua lộ trình bài bản. Hệ thống không chỉ dừng lại ở việc xem video mà còn tương tác trực tiếp với AI Tutor để giải đáp thắc mắc ngay trong bài học.
 
 ---
 
-## Tính năng nổi bật
+✨ Tính năng nổi bật
+1. Trí tuệ nhân tạo (AI Integration) 🤖
+AI Tutor: Giải đáp thắc mắc về nội dung bài giảng ngay tại trang xem video sử dụng Gemini 2.5 Flash.
 
-### 1.  Dành cho Học viên (User)
-* **Hệ thống tài khoản:** Đăng ký, Đăng nhập, Quản lý hồ sơ cá nhân (Profile).
-* **Khóa học (Courses):**
-    * Tìm kiếm khóa học theo tên.
-    * Xem chi tiết khóa học, giá tiền và nội dung.
-* **Học tập (Learning):**
-    * **Xem Video bài giảng:** Tích hợp trình phát video Youtube ngay trên web (Bảo mật link, không cần tải video nặng).
-    * Danh sách bài học hiển thị rõ ràng bên cạnh video.
-* **Lộ trình (Roadmaps):** Xem các lộ trình gợi ý (VD: Backend Python, Frontend Basic...).
-* **Mua sắm & Thanh toán:**
-    * Thêm khóa học vào giỏ hàng.
-    * Thanh toán (COD / Chuyển khoản).
-    * **Quản lý đơn hàng:** Xem trạng thái đơn, **Hủy đơn hàng** (khi trạng thái đang chờ xử lý).
+AI Consultant: Tư vấn lộ trình và khóa học phù hợp dựa trên nhu cầu học viên.
 
-### 2.  Dành cho Quản trị viên (Admin)
-* **Quản lý Khóa học:** Thêm/Sửa/Xóa khóa học.
-* **Quản lý Bài giảng (Inline Admin):** Thêm video bài học (Youtube ID) ngay trong giao diện sửa Khóa học.
-* **Quản lý Đơn hàng:** Duyệt đơn hàng thành công hoặc Hủy đơn.
-* **Quản lý Lộ trình:** Tạo lộ trình và gán khóa học vào lộ trình.
-* **Thống kê:** Quản lý người dùng, giảng viên.
+2. Nghiệp vụ học tập & Thanh toán
+Học tập: Trình phát Video Youtube Embed tối ưu, danh sách bài học trực quan, hệ thống đánh giá (Review).
 
----
+Lộ trình (Roadmap): Đăng ký mua khóa học theo gói combo lộ trình để nhận ưu đãi giảm giá.
 
-## Công nghệ sử dụng
+Thanh toán thông minh: Tích hợp VietQR tự động tạo mã QR kèm nội dung chuyển khoản chính xác.
 
-* **Backend:** Python 3.x, Django 5.x.
-* **Frontend:** HTML5, CSS3, **Bootstrap 5** (Responsive), Bootstrap Icons.
-* **Font:** Google Fonts (Dancing Script cho Footer & Roboto).
-* **Database:** SQLite (Mặc định).
+Quản lý đơn hàng: Cho phép người dùng theo dõi lịch sử mua hàng và hủy đơn khi đang ở trạng thái chờ duyệt.
 
----
+3. Bảo mật & Quản trị
+Validation: Chặn số và ký tự đặc biệt trong tên người dùng tại trang Hồ sơ cá nhân.
 
-## Cài đặt và Chạy dự án
+Giao diện Jazzmin: Hệ thống quản trị Admin được tùy chỉnh chuyên nghiệp, hiện đại với đầy đủ các Dashboard thống kê.
 
-Để chạy dự án này trên máy tính cá nhân, hãy làm theo các bước sau:
+🛠 Công nghệ sử dụng
+Framework: Django 5.2.10.
 
-### Bước 1: Clone dự án
-```bash
-git clone [https://github.com/TEN-CUA-BAN/TEN-REPO.git](https://github.com/TEN-CUA-BAN/TEN-REPO.git)
-cd TEN-REPO**
-```
-Bước 2: Tạo môi trường ảo (Khuyên dùng)
+Cơ sở dữ liệu: Microsoft SQL Server (MSSQL).
+
+Frontend: HTML5, CSS3, Bootstrap 5, JavaScript.
+
+Thư viện hỗ trợ: django-jazzmin, pillow, python-dotenv, google-generativeai.
+
+🚀 Hướng dẫn cài đặt & Chạy dự án
+Bước 1: Chuẩn bị môi trường
+
 ```Bash
-
+# Tạo và kích hoạt môi trường ảo
 python -m venv venv
-# Windows:
-venv\Scripts\activate
-# MacOS/Linux:
-source venv/bin/activate
+venv\Scripts\activate  # Windows
 ```
-Bước 3: Cài đặt thư viện
-```Bash
+Bước 2: Cài đặt thư viện
 
-pip install django pillow
+```Bash
+pip install -r requirements.txt
 ```
-Bước 4: Khởi tạo Database
-```Bash
+Bước 3: Cấu hình biến môi trường (.env)
+Tạo file .env tại thư mục gốc và khai báo (Dựa theo cấu hình trong settings.py):
+```
+GEMINI_API_KEY: API Key trợ giảng.
 
-python manage.py makemigrations
+SECRET_KEY: Khóa bí mật của dự án.
+
+EMAIL_HOST_USER / PASSWORD: Cấu hình gửi mã OTP.
+
+BANK_CODE, BANK_ACCOUNT_NUMBER: Thông tin nhận thanh toán VietQR.
+```
+Bước 4: Cấu hình Cơ sở dữ liệu
+Đảm bảo SQL Server đang chạy và thông tin kết nối trong settings.py đã chính xác:
+```
+Engine: mssql
+
+Host: DESKTOP-CU99I1G\SQLEXPRESS
+
+Database: WebHocTap_Moi
+```
+Bước 5: Khởi tạo và chạy Server
+
+```Bash
+python manage.py collectstatic  # Gom file tĩnh vào thư mục staticfiles
 python manage.py migrate
-```
-Bước 5: Tạo tài khoản Admin
-```Bash
-
-python manage.py createsuperuser
-# Nhập username, email và password...
-```
-Bước 6: Chạy Server
-```Bash
-
-python manage.py runserver
+python manage.py runserver 8888  # Chạy tại cổng 8888
 ```
 ##Hình ảnh Demo
 1.Đăng ký
