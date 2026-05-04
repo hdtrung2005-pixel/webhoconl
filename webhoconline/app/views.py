@@ -113,29 +113,40 @@ def register(request):
 
 @login_required(login_url='login')
 def profile(request):
+    # 1. Khởi tạo form với dữ liệu hiện tại của user để hiển thị lên giao diện
+    form = ProfileForm(instance=request.user)
+
     if request.method == 'POST':
         action = request.POST.get('action')
         user = request.user
+        
         if action == 'update_info':
-            user.full_name = request.POST.get('full_name')
-            user.email = request.POST.get('email')
-            if request.FILES.get('avatar'): user.avatar = request.FILES.get('avatar')
-            user.save()
-            messages.success(request, "Cập nhật thành công!")
+            # 2. Dùng ProfileForm để hứng dữ liệu (Phải có cái này thì nó mới chạy hàm check chặn số)
+            form = ProfileForm(request.POST, request.FILES, instance=user)
+            if form.is_valid():
+                form.save()
+                messages.success(request, "Cập nhật hồ sơ thành công!")
+                return redirect('profile')
+            else:
+                messages.error(request, "Cập nhật thất bại. Vui lòng kiểm tra lỗi bên dưới!")
+                
         elif action == 'change_password':
             old_pwd = request.POST.get('old_password')
             new_pwd = request.POST.get('new_password')
-            if not user.check_password(old_pwd): messages.error(request, "Mật khẩu cũ sai!")
-            elif new_pwd != request.POST.get('confirm_password'): messages.error(request, "Xác nhận không khớp!")
-            elif len(new_pwd) < 6: messages.error(request, "Mật khẩu > 6 ký tự!")
+            if not user.check_password(old_pwd): 
+                messages.error(request, "Mật khẩu cũ sai!")
+            elif new_pwd != request.POST.get('confirm_password'): 
+                messages.error(request, "Xác nhận không khớp!")
+            elif len(new_pwd) < 6: 
+                messages.error(request, "Mật khẩu > 6 ký tự!")
             else:
                 user.set_password(new_pwd)
                 user.save()
                 update_session_auth_hash(request, user)
                 messages.success(request, "Đổi mật khẩu thành công!")
-        return redirect('profile')
-    return render(request, 'app/profile.html')
+            return redirect('profile')
 
+    return render(request, 'app/profile.html', {'form': form})
 # --- GIỎ HÀNG VÀ THANH TOÁN ---
 @login_required(login_url='login')
 def add_to_cart(request, course_id):

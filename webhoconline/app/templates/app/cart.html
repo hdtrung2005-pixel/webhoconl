@@ -1,7 +1,7 @@
 ﻿{% extends 'app/base.html' %}
 {% load humanize %}
 {% block title %}Giỏ hàng của bạn - Học Lập Trình{% endblock %}
-
+{% load static %}
 {% block content %}
 <div class="bg-primary bg-gradient text-white py-4 mb-5 shadow-sm" style="margin-top: -1.5rem;">
     <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center">
@@ -91,7 +91,7 @@
                         <label class="payment-method-card w-100 mb-4">
                             <input type="radio" name="payment_method" value="momo" class="d-none">
                             <div class="card-body d-flex align-items-center border rounded-3 p-3 bg-white cursor-pointer transition-all">
-                                <img src="https://upload.wikimedia.org/wikipedia/vi/f/fe/MoMo_Logo.png" style="width: 30px; height: 30px; object-fit: contain;" class="me-3">
+                                <img src="https://static.mservice.io/img/logo-momo.png" alt="MoMo Logo" style="width: 35px; height: 35px; object-fit: contain; border-radius: 5px;">
                                 <div>
                                     <h6 class="fw-bold mb-0 text-dark">Thanh toán Ví MoMo</h6>
                                     <small class="text-muted">Quét mã tiện lợi</small>
