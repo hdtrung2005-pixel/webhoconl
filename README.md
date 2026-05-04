@@ -4,7 +4,7 @@
 
 📝 Giới thiệu dự án
 >>Dự án là nền tảng giáo dục trực tuyến toàn diện, giúp học viên tiếp cận tri thức lập trình thông qua lộ trình bài bản. Hệ thống không chỉ dừng lại ở việc xem video mà còn tương tác trực tiếp với AI Tutor để giải đáp thắc mắc ngay trong bài học.
-## 📌 Mục lục
+##  Mục lục
 
 * [Tính năng nổi bật](#tính-năng-nổi-bật)
 * [Yêu cầu & Cài đặt](#yêu-cầu--cài-đặt)
@@ -12,7 +12,7 @@
 * [Công nghệ sử dụng](#công-nghệ-sử-dụng)
 ---
 
-Tính năng nổi bật
+## Tính năng nổi bật
 
 
 ### 1. Dành cho Học viên (Student)
@@ -39,7 +39,7 @@ AI Consultant: Tư vấn lộ trình và khóa học phù hợp dựa trên nhu 
 
 ---
 
-## 🛠 Yêu cầu & Cài đặt
+## Yêu cầu & Cài đặt
 
 ### Yêu cầu hệ thống
 * **Python** >= 3.11.9
@@ -79,7 +79,7 @@ pip install django pillow python-dotenv google-generativeai django-jazzmin mssql
    python manage.py migrate
 ---
 
-Cách sử dụng
+## Cách sử dụng
 **Chạy server Django tại cổng 8888 (theo cấu hình dự án):**
   
     python manage.py runserver 8888
@@ -91,7 +91,7 @@ Cách sử dụng
 
     http://127.0.0.1:8888/admin/
 ---
-Công nghệ sử dụng
+## Công nghệ sử dụng
 Backend Framework: Django 5.2.10
 
 Ngôn ngữ: Python 3.11.9
