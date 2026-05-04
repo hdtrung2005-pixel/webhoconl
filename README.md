@@ -103,3 +103,5 @@ Frontend: Bootstrap 5, HTML5, CSS3, JavaScript
 AI Integration: Google Gemini AI API
 
 Giao diện quản trị: Jazzmin
+---
+Dự án phục vụ mục đích học tập và thực hành môn Phát triển ứng dụng Python.
