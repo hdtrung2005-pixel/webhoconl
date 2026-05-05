@@ -459,11 +459,8 @@ def ask_ai_tutor(request):
             if not question:
                 return JsonResponse({'status': 'error', 'message': 'Câu hỏi trống!'})
 
-            # Dùng chuẩn bản 2.5 mới nhất
             model = genai.GenerativeModel('gemini-2.5-flash')
             prompt = f"Bạn là trợ giảng IT của CEO HỌC LẬP TRÌNH. Giải đáp bài học '{data.get('lesson_title')}'. Câu hỏi: {question}"
-            
-            # Chỉ gọi AI đúng 1 lần duy nhất
             response = model.generate_content(prompt)
             return JsonResponse({'status': 'success', 'answer': response.text})
         except Exception as e:
